@@ -70,9 +70,9 @@ export default function Home() {
               </h1>
               
               <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-12 max-w-4xl mx-auto leading-relaxed">
-                Somos uma holding de tecnologia que revoluciona mercados através da inovação e 
+                Somos uma empresa de tecnologia que revoluciona a educação através da inovação e 
                 <strong className="text-blue-600 dark:text-blue-400"> inteligência artificial própria</strong>, 
-                conectando conhecimento, tecnologia e oportunidades.
+                conectando conhecimento, ensino e transformação digital.
               </p>
             </div>
 
@@ -120,9 +120,9 @@ export default function Home() {
               A solução de <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">ponta a ponta</span> mais fácil e rápida
             </h2>
             <p className="text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-4xl mx-auto">
-              Uma só empresa que reúne tudo o que você precisa para começar ou escalar o seu negócio digital. 
-              <strong className="text-blue-600 dark:text-blue-400"> Nossa IA própria potencializa</strong> cada uma de nossas empresas, 
-              criando ecossistemas tecnológicos que transformam mercados.
+              Uma só empresa que reúne tudo o que você precisa para transformar a educação através da tecnologia. 
+              <strong className="text-blue-600 dark:text-blue-400"> Nossa IA própria potencializa</strong> cada uma de nossas soluções, 
+              criando ecossistemas educacionais que revolucionam o ensino e aprendizagem.
             </p>
           </div>
           
@@ -133,8 +133,8 @@ export default function Home() {
               </div>
               <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Inovação Contínua</h3>
               <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed">
-                Desenvolvemos tecnologias disruptivas que antecipam as necessidades do mercado e 
-                <strong className="text-blue-600 dark:text-blue-400"> revolucionam setores inteiros</strong>.
+                Desenvolvemos tecnologias educacionais disruptivas que antecipam as necessidades do ensino e 
+                <strong className="text-blue-600 dark:text-blue-400"> revolucionam a educação</strong>.
               </p>
             </div>
             
@@ -144,8 +144,8 @@ export default function Home() {
               </div>
               <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">IA Proprietária</h3>
               <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed">
-                Nossa inteligência artificial própria impulsiona cada solução que criamos, 
-                <strong className="text-purple-600 dark:text-purple-400"> oferecendo vantagem competitiva única</strong>.
+                Nossa inteligência artificial própria impulsiona cada solução educacional que criamos, 
+                <strong className="text-purple-600 dark:text-purple-400"> oferecendo vantagem única no ensino</strong>.
               </p>
             </div>
             
@@ -155,8 +155,8 @@ export default function Home() {
               </div>
               <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Ecossistema Integrado</h3>
               <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed">
-                Conectamos diferentes verticais através de um ecossistema tecnológico robusto que 
-                <strong className="text-green-600 dark:text-green-400"> maximiza resultados</strong>.
+                Conectamos diferentes áreas educacionais através de um ecossistema tecnológico robusto que 
+                <strong className="text-green-600 dark:text-green-400"> maximiza o aprendizado</strong>.
               </p>
             </div>
           </div>
@@ -171,9 +171,9 @@ export default function Home() {
               Nossas <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Empresas</span>
             </h2>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed">
-              Três empresas inovadoras que formam nosso ecossistema tecnológico. 
-              <strong className="text-blue-600 dark:text-blue-400">Uma só ferramenta que reúne tudo</strong> o que você precisa 
-              para começar ou escalar o seu negócio digital.
+              Três soluções inovadoras que formam nosso ecossistema educacional. 
+              <strong className="text-blue-600 dark:text-blue-400">Ferramentas completas</strong> que reúnem tudo o que você precisa 
+              para transformar a educação e o ensino através da tecnologia.
             </p>
           </div>
           
@@ -281,7 +281,7 @@ export default function Home() {
               </div>
               
               <p className="text-blue-600 dark:text-blue-400 font-bold mb-8 text-xl leading-relaxed">
-                Soluções tecnológicas avançadas para empresas que buscam inovação digital e crescimento sustentável.
+                Plataforma completa para instituições de ensino superior com tudo o que precisam para transformar a educação!
               </p>
               
               <ul className="space-y-4 mb-10">
@@ -289,25 +289,25 @@ export default function Home() {
                   <div className="w-6 h-6 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mr-4 mt-0.5 flex-shrink-0">
                     <i className="fas fa-check text-blue-600 dark:text-blue-400 text-sm"></i>
                   </div>
-                  <span className="text-gray-700 dark:text-gray-300 text-lg">Desenvolvimento de plataformas digitais customizadas</span>
+                  <span className="text-gray-700 dark:text-gray-300 text-lg">Ambiente completo para disponibilizar aulas e conteúdos</span>
                 </li>
                 <li className="flex items-start">
                   <div className="w-6 h-6 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mr-4 mt-0.5 flex-shrink-0">
                     <i className="fas fa-check text-blue-600 dark:text-blue-400 text-sm"></i>
                   </div>
-                  <span className="text-gray-700 dark:text-gray-300 text-lg">Integração de IA em processos empresariais</span>
+                  <span className="text-gray-700 dark:text-gray-300 text-lg">Gestão de projetos acadêmicos e pesquisa</span>
                 </li>
                 <li className="flex items-start">
                   <div className="w-6 h-6 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mr-4 mt-0.5 flex-shrink-0">
                     <i className="fas fa-check text-blue-600 dark:text-blue-400 text-sm"></i>
                   </div>
-                  <span className="text-gray-700 dark:text-gray-300 text-lg">Consultoria em transformação digital</span>
+                  <span className="text-gray-700 dark:text-gray-300 text-lg">Sistema integrado para instituições de ensino superior</span>
                 </li>
                 <li className="flex items-start">
                   <div className="w-6 h-6 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mr-4 mt-0.5 flex-shrink-0">
                     <i className="fas fa-check text-blue-600 dark:text-blue-400 text-sm"></i>
                   </div>
-                  <span className="text-gray-700 dark:text-gray-300 text-lg">Soluções escaláveis e acompanhamento contínuo</span>
+                  <span className="text-gray-700 dark:text-gray-300 text-lg">Ferramentas de IA para potencializar o ensino</span>
                 </li>
               </ul>
               
@@ -490,11 +490,11 @@ export default function Home() {
         <div className="container mx-auto px-6 text-center">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-5xl md:text-6xl font-bold text-white mb-8 leading-tight">
-              Pronto para <span className="text-yellow-300">Transformar</span> seu Negócio?
+              Pronto para <span className="text-yellow-300">Transformar</span> sua Educação?
             </h2>
             <p className="text-xl md:text-2xl text-blue-100 mb-12 leading-relaxed">
               Junte-se ao ecossistema BIPETech e descubra como nossas soluções podem 
-              <strong className="text-yellow-300"> impulsionar seu crescimento</strong> através da tecnologia e inovação.
+              <strong className="text-yellow-300"> revolucionar sua instituição de ensino</strong> através da tecnologia e inovação educacional.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
@@ -527,8 +527,8 @@ export default function Home() {
                 </span>
               </div>
               <p className="text-gray-400 mb-8 max-w-md text-lg leading-relaxed">
-                Holding de tecnologia focada em inovação e inteligência artificial, 
-                <strong className="text-blue-400"> transformando conhecimento</strong> em oportunidades digitais.
+                Empresa de tecnologia focada em soluções educacionais e inteligência artificial, 
+                <strong className="text-blue-400"> transformando o ensino</strong> através da inovação digital.
               </p>
               <div className="flex space-x-6">
                 <div className="w-10 h-10 bg-gray-800 hover:bg-blue-600 rounded-lg flex items-center justify-center transition-all duration-300 cursor-pointer">

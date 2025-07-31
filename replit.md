@@ -2,7 +2,7 @@
 
 ## Overview
 
-BIPETech is a modern technology holding company website built with React, TypeScript, and Express.js. The platform showcases the company's portfolio of technology ventures and AI innovations through a professional corporate website. The application is designed as a full-stack solution with a React frontend and Express backend, utilizing modern development practices and a comprehensive UI component library.
+BIPETech is a modern educational technology company website built with React, TypeScript, and Express.js. The platform showcases the company's portfolio of educational solutions and AI innovations through a professional corporate website designed to transform education through technology. The application is designed as a full-stack solution with a React frontend and Express backend, utilizing modern development practices and a comprehensive UI component library.
 
 ## User Preferences
 
