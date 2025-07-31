@@ -188,7 +188,7 @@ export default function Home() {
               </div>
               
               <p className="text-green-600 dark:text-green-400 font-bold mb-8 text-xl leading-relaxed">
-                Transforme seu conhecimento jurídico em renda: crie sua página de vendas profissional em minutos!
+                Encontre o advogado ideal para sua necessidade jurídica, de forma rápida, segura e online.
               </p>
               
               <ul className="space-y-4 mb-10">
@@ -196,25 +196,31 @@ export default function Home() {
                   <div className="w-6 h-6 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mr-4 mt-0.5 flex-shrink-0">
                     <i className="fas fa-check text-green-600 dark:text-green-400 text-sm"></i>
                   </div>
-                  <span className="text-gray-700 dark:text-gray-300 text-lg">Crie páginas de vendas personalizadas para seus cursos jurídicos</span>
+                  <span className="text-gray-700 dark:text-gray-300 text-lg">Plataforma moderna para busca e agendamento de consultas jurídicas</span>
                 </li>
                 <li className="flex items-start">
                   <div className="w-6 h-6 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mr-4 mt-0.5 flex-shrink-0">
                     <i className="fas fa-check text-green-600 dark:text-green-400 text-sm"></i>
                   </div>
-                  <span className="text-gray-700 dark:text-gray-300 text-lg">Construtor visual fácil, rápido e responsivo</span>
+                  <span className="text-gray-700 dark:text-gray-300 text-lg">Perfis completos de advogados, áreas de atuação e avaliações reais</span>
                 </li>
                 <li className="flex items-start">
                   <div className="w-6 h-6 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mr-4 mt-0.5 flex-shrink-0">
                     <i className="fas fa-check text-green-600 dark:text-green-400 text-sm"></i>
                   </div>
-                  <span className="text-gray-700 dark:text-gray-300 text-lg">Plataforma segura, moderna e feita para advogados</span>
+                  <span className="text-gray-700 dark:text-gray-300 text-lg">Atendimento online e presencial, com agilidade e segurança</span>
                 </li>
                 <li className="flex items-start">
                   <div className="w-6 h-6 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mr-4 mt-0.5 flex-shrink-0">
                     <i className="fas fa-check text-green-600 dark:text-green-400 text-sm"></i>
                   </div>
-                  <span className="text-gray-700 dark:text-gray-300 text-lg">Tudo em um só lugar: do cadastro à venda online</span>
+                  <span className="text-gray-700 dark:text-gray-300 text-lg">Ferramentas para facilitar o contato e acompanhamento do cliente</span>
+                </li>
+                <li className="flex items-start">
+                  <div className="w-6 h-6 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mr-4 mt-0.5 flex-shrink-0">
+                    <i className="fas fa-check text-green-600 dark:text-green-400 text-sm"></i>
+                  </div>
+                  <span className="text-gray-700 dark:text-gray-300 text-lg">Interface intuitiva, responsiva e acessível</span>
                 </li>
               </ul>
               
