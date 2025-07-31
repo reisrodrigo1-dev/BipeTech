@@ -56,10 +56,7 @@ export default function Home() {
         <div className="container mx-auto px-6">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
-              <div className="inline-flex items-center space-x-2 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-6 py-3 rounded-full text-sm font-semibold mb-8 border border-blue-200 dark:border-blue-800">
-                <i className="fas fa-robot text-lg"></i>
-                <span>Powered by IA própria</span>
-              </div>
+
               
               <h1 className="text-6xl md:text-7xl font-bold text-gray-900 dark:text-white mb-8 leading-tight">
                 Grandes nomes estão <br />
