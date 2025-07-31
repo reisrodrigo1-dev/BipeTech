@@ -42,7 +42,6 @@ export default function Home() {
               <button onClick={() => scrollToSection('sobre')} className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium">Sobre</button>
               <button onClick={() => scrollToSection('empresas')} className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium">Empresas</button>
               <button onClick={() => scrollToSection('missao')} className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium">Missão</button>
-              <button onClick={() => scrollToSection('tecnologias')} className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium">Tecnologias</button>
             </div>
             
             <button className="md:hidden text-gray-600 dark:text-gray-300">
@@ -404,86 +403,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Technologies Section */}
-      <section id="tecnologias" className="py-20 bg-white dark:bg-gray-900">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-5xl md:text-6xl font-bold text-gray-900 dark:text-white mb-8">
-              Stack <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Tecnológico</span>
-            </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed">
-              Solução completa que integra as <strong className="text-blue-600 dark:text-blue-400">melhores ferramentas</strong> do mercado 
-              para facilitar o sucesso da sua jornada digital.
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-6 max-w-7xl mx-auto mb-16">
-            
-            {/* React */}
-            <div className="group bg-white dark:bg-gray-800 rounded-2xl p-6 text-center hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400">
-              <i className="fab fa-react text-5xl text-blue-400 mb-4 group-hover:scale-110 transition-transform duration-300"></i>
-              <h4 className="text-gray-900 dark:text-white font-bold text-sm mb-1">React</h4>
-              <p className="text-gray-500 dark:text-gray-400 text-xs">Components & Hooks</p>
-            </div>
-            
-            {/* Vite */}
-            <div className="group bg-white dark:bg-gray-800 rounded-2xl p-6 text-center hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700 hover:border-yellow-500 dark:hover:border-yellow-400">
-              <i className="fas fa-bolt text-5xl text-yellow-400 mb-4 group-hover:scale-110 transition-transform duration-300"></i>
-              <h4 className="text-gray-900 dark:text-white font-bold text-sm mb-1">Vite</h4>
-              <p className="text-gray-500 dark:text-gray-400 text-xs">Build Tool</p>
-            </div>
-            
-            {/* Tailwind CSS */}
-            <div className="group bg-white dark:bg-gray-800 rounded-2xl p-6 text-center hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700 hover:border-teal-500 dark:hover:border-teal-400">
-              <i className="fas fa-paint-brush text-5xl text-teal-400 mb-4 group-hover:scale-110 transition-transform duration-300"></i>
-              <h4 className="text-gray-900 dark:text-white font-bold text-sm mb-1">Tailwind</h4>
-              <p className="text-gray-500 dark:text-gray-400 text-xs">CSS Framework</p>
-            </div>
-            
-            {/* JavaScript */}
-            <div className="group bg-white dark:bg-gray-800 rounded-2xl p-6 text-center hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700 hover:border-yellow-600 dark:hover:border-yellow-500">
-              <i className="fab fa-js-square text-5xl text-yellow-300 mb-4 group-hover:scale-110 transition-transform duration-300"></i>
-              <h4 className="text-gray-900 dark:text-white font-bold text-sm mb-1">JavaScript</h4>
-              <p className="text-gray-500 dark:text-gray-400 text-xs">ES6+</p>
-            </div>
-            
-            {/* HTML5 */}
-            <div className="group bg-white dark:bg-gray-800 rounded-2xl p-6 text-center hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700 hover:border-orange-500 dark:hover:border-orange-400">
-              <i className="fab fa-html5 text-5xl text-orange-500 mb-4 group-hover:scale-110 transition-transform duration-300"></i>
-              <h4 className="text-gray-900 dark:text-white font-bold text-sm mb-1">HTML5</h4>
-              <p className="text-gray-500 dark:text-gray-400 text-xs">Semantic</p>
-            </div>
-            
-            {/* CSS3 */}
-            <div className="group bg-white dark:bg-gray-800 rounded-2xl p-6 text-center hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700 hover:border-blue-600 dark:hover:border-blue-500">
-              <i className="fab fa-css3-alt text-5xl text-blue-500 mb-4 group-hover:scale-110 transition-transform duration-300"></i>
-              <h4 className="text-gray-900 dark:text-white font-bold text-sm mb-1">CSS3</h4>
-              <p className="text-gray-500 dark:text-gray-400 text-xs">Responsive</p>
-            </div>
-            
-            {/* Google Fonts */}
-            <div className="group bg-white dark:bg-gray-800 rounded-2xl p-6 text-center hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700 hover:border-red-500 dark:hover:border-red-400">
-              <i className="fab fa-google text-5xl text-red-500 mb-4 group-hover:scale-110 transition-transform duration-300"></i>
-              <h4 className="text-gray-900 dark:text-white font-bold text-sm mb-1">G. Fonts</h4>
-              <p className="text-gray-500 dark:text-gray-400 text-xs">Inter Typography</p>
-            </div>
-            
-            {/* SVG */}
-            <div className="group bg-white dark:bg-gray-800 rounded-2xl p-6 text-center hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700 hover:border-green-500 dark:hover:border-green-400">
-              <i className="fas fa-vector-square text-5xl text-green-400 mb-4 group-hover:scale-110 transition-transform duration-300"></i>
-              <h4 className="text-gray-900 dark:text-white font-bold text-sm mb-1">SVG</h4>
-              <p className="text-gray-500 dark:text-gray-400 text-xs">Icons & Graphics</p>
-            </div>
-          </div>
-          
-          <div className="text-center">
-            <div className="inline-flex items-center space-x-4 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-8 py-4 rounded-2xl border border-gray-200 dark:border-gray-700">
-              <i className="fas fa-code text-xl"></i>
-              <span className="font-semibold">ESLint • Context API • Mobile-First • SEO Optimized</span>
-            </div>
-          </div>
-        </div>
-      </section>
+
 
       {/* CTA Section */}
       <section className="bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800 py-24">
