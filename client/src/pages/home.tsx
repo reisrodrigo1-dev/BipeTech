@@ -30,8 +30,12 @@ export default function Home() {
         <nav className="container mx-auto px-6 py-4">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                <i className="fas fa-brain text-white text-xl"></i>
+              <div className="w-20 h-16 bg-white rounded-xl flex items-center justify-center shadow-lg border border-gray-200 dark:border-gray-600">
+                <img 
+                  src="/logo_BIPETech.png" 
+                  alt="BIPETech Logo" 
+                  className="w-18 h-14 object-contain"
+                />
               </div>
               <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 BIPETech
@@ -168,7 +172,7 @@ export default function Home() {
             </h2>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed">
               Três soluções inovadoras que formam nosso ecossistema educacional. 
-              <strong className="text-blue-600 dark:text-blue-400">Ferramentas completas</strong> que reúnem tudo o que você precisa 
+              <strong className="text-blue-600 dark:text-blue-400"> Ferramentas completas</strong> que reúnem tudo o que você precisa 
               para transformar a educação e o ensino através da tecnologia.
             </p>
           </div>
@@ -178,8 +182,12 @@ export default function Home() {
             {/* DireitoHub */}
             <div className="group bg-white dark:bg-gray-800 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 p-8 border border-gray-200 dark:border-gray-700 hover:border-green-500 dark:hover:border-green-400">
               <div className="flex items-center mb-8">
-                <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
-                  <i className="fas fa-balance-scale text-white text-2xl"></i>
+                <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300 shadow-md border border-gray-200 dark:border-gray-600">
+                  <img 
+                    src="/logo_direitoHub.png" 
+                    alt="DireitoHub Logo" 
+                    className="w-12 h-12 object-contain"
+                  />
                 </div>
                 <h3 className="text-3xl font-bold text-gray-900 dark:text-white">DireitoHub</h3>
               </div>
@@ -221,7 +229,10 @@ export default function Home() {
                 </li>
               </ul>
               
-              <button className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white py-4 rounded-xl font-bold text-lg transition-all transform hover:scale-105 shadow-lg">
+              <button 
+                onClick={() => window.open('https://www.direitohub.com.br/', '_blank')}
+                className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white py-4 rounded-xl font-bold text-lg transition-all transform hover:scale-105 shadow-lg cursor-pointer"
+              >
                 <i className="fas fa-arrow-right mr-3"></i>
                 Conhecer DireitoHub
               </button>
@@ -230,8 +241,12 @@ export default function Home() {
             {/* Marketplace */}
             <div className="group bg-white dark:bg-gray-800 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 p-8 border border-gray-200 dark:border-gray-700 hover:border-purple-500 dark:hover:border-purple-400">
               <div className="flex items-center mb-8">
-                <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
-                  <i className="fas fa-store text-white text-2xl"></i>
+                <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300 shadow-md border border-gray-200 dark:border-gray-600">
+                  <img 
+                    src="/logo_MarketPlace.png" 
+                    alt="Marketplace Logo" 
+                    className="w-12 h-12 object-contain"
+                  />
                 </div>
                 <h3 className="text-3xl font-bold text-gray-900 dark:text-white">Marketplace</h3>
               </div>
@@ -276,8 +291,12 @@ export default function Home() {
             {/* BIPE Plataforma */}
             <div className="group bg-white dark:bg-gray-800 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 p-8 border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400">
               <div className="flex items-center mb-8">
-                <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
-                  <i className="fas fa-code text-white text-2xl"></i>
+                <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300 shadow-md border border-gray-200 dark:border-gray-600">
+                  <img 
+                    src="/logo_BIPEPlataforma.png" 
+                    alt="BIPE Plataforma Logo" 
+                    className="w-12 h-12 object-contain"
+                  />
                 </div>
                 <h3 className="text-3xl font-bold text-gray-900 dark:text-white">BIPE Plataforma</h3>
               </div>
@@ -473,7 +492,7 @@ export default function Home() {
             <div>
               <h4 className="text-white font-bold text-lg mb-6">Nossas Empresas</h4>
               <ul className="space-y-4">
-                <li><a href="#" className="text-gray-400 hover:text-blue-400 transition-colors text-lg">DireitoHub</a></li>
+                <li><a href="https://www.direitohub.com.br/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-400 transition-colors text-lg">DireitoHub</a></li>
                 <li><a href="#" className="text-gray-400 hover:text-purple-400 transition-colors text-lg">Marketplace</a></li>
                 <li><a href="#" className="text-gray-400 hover:text-blue-400 transition-colors text-lg">BIPE Plataforma</a></li>
               </ul>
