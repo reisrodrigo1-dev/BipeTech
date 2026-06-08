@@ -1,523 +1,626 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import {
+  Menu,
+  X,
+  Sun,
+  Moon,
+  ArrowRight,
+  ArrowUpRight,
+  Check,
+  Building2,
+  GraduationCap,
+  BrainCircuit,
+  Store,
+  Scale,
+  Sparkles,
+  Radio,
+  CreditCard,
+  BarChart3,
+  CalendarCheck,
+  Target,
+  Eye,
+  Cpu,
+  ShieldCheck,
+  Users,
+  TrendingUp,
+  Zap,
+  HeartHandshake,
+  Linkedin,
+  Instagram,
+  Mail,
+  type LucideIcon,
+} from "lucide-react";
 
-export default function Home() {
-  const [isHeaderScrolled, setIsHeaderScrolled] = useState(false);
+/* ------------------------------------------------------------------ */
+/* Hooks                                                               */
+/* ------------------------------------------------------------------ */
+
+function useTheme() {
+  const [theme, setTheme] = useState<"light" | "dark">("light");
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsHeaderScrolled(window.scrollY > 50);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const stored = localStorage.getItem("bipetech-theme");
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const initial = (stored as "light" | "dark") || (prefersDark ? "dark" : "light");
+    setTheme(initial);
   }, []);
 
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", theme === "dark");
+    localStorage.setItem("bipetech-theme", theme);
+  }, [theme]);
+
+  return { theme, toggle: () => setTheme((t) => (t === "dark" ? "light" : "dark")) };
+}
+
+/** Adds `is-visible` to `.reveal` elements as they enter the viewport. */
+function useReveal() {
+  useEffect(() => {
+    const els = document.querySelectorAll<HTMLElement>(".reveal");
+    if (!("IntersectionObserver" in window)) {
+      els.forEach((el) => el.classList.add("is-visible"));
+      return;
     }
-  };
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            io.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
+    );
+    els.forEach((el) => io.observe(el));
+
+    // Safety net: immediately reveal anything already in the viewport (above the
+    // fold), and guarantee everything is shown shortly after load even if the
+    // observer never fires (e.g. unusual viewport / no-scroll environments).
+    const revealInView = () => {
+      els.forEach((el) => {
+        if (el.getBoundingClientRect().top < window.innerHeight) {
+          el.classList.add("is-visible");
+        }
+      });
+    };
+    revealInView();
+    const fallback = window.setTimeout(() => {
+      els.forEach((el) => el.classList.add("is-visible"));
+    }, 1200);
+
+    return () => {
+      io.disconnect();
+      window.clearTimeout(fallback);
+    };
+  }, []);
+}
+
+/* ------------------------------------------------------------------ */
+/* Small building blocks                                               */
+/* ------------------------------------------------------------------ */
+
+function Eyebrow({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="inline-block text-[0.8125rem] font-semibold uppercase tracking-[0.08em] text-primary">
+      {children}
+    </span>
+  );
+}
+
+function NavLink({ label, href, onClick }: { label: string; href: string; onClick?: () => void }) {
+  return (
+    <a
+      href={href}
+      onClick={onClick}
+      className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring rounded-sm"
+    >
+      {label}
+    </a>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Data                                                                */
+/* ------------------------------------------------------------------ */
+
+const NAV_LINKS = [
+  { label: "Sobre", href: "#sobre" },
+  { label: "Produtos", href: "#produtos" },
+  { label: "Princípios", href: "#principios" },
+  { label: "Contato", href: "#contato" },
+];
+
+const PILARES: { titulo: string; descricao: string; icone: LucideIcon }[] = [
+  {
+    titulo: "Infraestrutura para quem ensina",
+    descricao:
+      "Ferramentas para educadores e criadores produzirem, venderem e monetizarem conhecimento, com tecnologia integrada em um só lugar.",
+    icone: Building2,
+  },
+  {
+    titulo: "Jornada para quem aprende",
+    descricao:
+      "Experiências de estudo com método, ritmo e apoio, desenhadas a partir da realidade de cada aluno até o objetivo final.",
+    icone: GraduationCap,
+  },
+  {
+    titulo: "Inteligência que organiza",
+    descricao:
+      "IA como camada que organiza estudos, personaliza jornadas e aproxima o aprendizado do resultado real de cada pessoa.",
+    icone: BrainCircuit,
+  },
+];
+
+const PRODUTOS = [
+  {
+    nome: "ConectaEduca",
+    tagline: "A plataforma completa de educação digital",
+    descricao:
+      "Um marketplace de dois lados: dá a criadores e educadores as ferramentas para produzir, vender e monetizar cursos e conteúdo, e a alunos um universo amplo de conhecimento profissional relevante.",
+    bullets: [
+      "Criação e venda de cursos em um só lugar",
+      "Player de aulas ao vivo e gravadas",
+      "Pagamentos, analytics e monetização integrados",
+      "Feito para criadores e alunos — os dois lados do mercado",
+    ],
+    ctaLabel: "Acessar ConectaEduca",
+    ctaUrl: "https://conectaeduca.com.br",
+    icone: Store,
+    accentClass: "accent-conecta",
+  },
+  {
+    nome: "TreinadorOAB",
+    tagline: "Acompanhamento de estudos para a 1ª fase da OAB",
+    descricao:
+      "Vai além do conteúdo. Guiada pelo método “Destranque sua Aprovação”, organiza a rotina diária, sustenta a constância e cuida do lado emocional da jornada — com método, ritmo e apoio até a aprovação.",
+    bullets: [
+      "Método “Destranque sua Aprovação”",
+      "Organização diária dos estudos e constância",
+      "Apoio emocional ao longo da jornada",
+      "Rádio TreinadorOAB: dicas, correção de questões e jurisprudência",
+    ],
+    ctaLabel: "Acessar TreinadorOAB",
+    ctaUrl: "https://treinadoroab.com.br",
+    icone: Scale,
+    accentClass: "accent-oab",
+  },
+];
+
+const DIFERENCIAIS: { titulo: string; descricao: string; icone: LucideIcon; large?: boolean }[] = [
+  {
+    titulo: "IA aplicada à educação",
+    descricao:
+      "Inteligência artificial como camada que organiza estudos, personaliza jornadas e amplia o alcance de educadores — não como vitrine.",
+    icone: Sparkles,
+    large: true,
+  },
+  { titulo: "Player ao vivo e gravado", descricao: "Aulas com qualidade e fluidez para criadores e alunos.", icone: BarChart3 },
+  { titulo: "Pagamentos e monetização", descricao: "Infraestrutura para transformar conhecimento em renda.", icone: CreditCard },
+  { titulo: "Acompanhamento de estudos", descricao: "Rotina, constância e método guiando o aluno até o resultado.", icone: CalendarCheck },
+  { titulo: "Rádio e conteúdo em áudio", descricao: "Dicas, correções e novidades no ritmo do estudante.", icone: Radio },
+];
+
+const VALORES: { titulo: string; descricao: string; icone: LucideIcon }[] = [
+  { titulo: "Educação que gera resultado", descricao: "Medimos sucesso pela transformação real do aluno e do educador, não por vaidade de plataforma.", icone: Target },
+  { titulo: "Tecnologia com propósito", descricao: "IA e produto são meios, não vitrine. Só construímos o que torna o aprender mais simples e humano.", icone: Cpu },
+  { titulo: "Honestidade no que prometemos", descricao: "Comunicamos com clareza, sem inflar números ou expectativas. Confiança vem da transparência.", icone: ShieldCheck },
+  { titulo: "Foco em quem usa", descricao: "Conhecemos a fundo cada público e desenhamos cada produto a partir da sua realidade.", icone: Users },
+  { titulo: "Constância e excelência", descricao: "Grandes conquistas vêm da disciplina diária — no aluno e na forma como evoluímos.", icone: TrendingUp },
+];
+
+/* ------------------------------------------------------------------ */
+/* Page                                                                */
+/* ------------------------------------------------------------------ */
+
+export default function Home() {
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const { theme, toggle } = useTheme();
+  useReveal();
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
-    <div className="font-inter bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-      {/* Header */}
-      <header className={`fixed w-full top-0 z-50 transition-all duration-300 ${
-        isHeaderScrolled 
-          ? 'bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-lg' 
-          : 'bg-transparent'
-      }`}>
-        <nav className="container mx-auto px-6 py-4">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-3">
-              <div className="w-20 h-16 bg-white rounded-xl flex items-center justify-center shadow-lg border border-gray-200 dark:border-gray-600">
-                <img 
-                  src="/logo_BIPETech.png" 
-                  alt="BIPETech Logo" 
-                  className="w-18 h-14 object-contain"
-                />
-              </div>
-              <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                BIPETech
-              </span>
-            </div>
-            
-            <div className="hidden md:flex space-x-8">
-              <button onClick={() => scrollToSection('sobre')} className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium">Sobre</button>
-              <button onClick={() => scrollToSection('empresas')} className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium">Empresas</button>
-              <button onClick={() => scrollToSection('missao')} className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium">Missão</button>
-            </div>
-            
-            <button className="md:hidden text-gray-600 dark:text-gray-300">
-              <i className="fas fa-bars text-xl"></i>
+    <div className="min-h-dvh bg-background text-foreground">
+      {/* ===================== Header ===================== */}
+      <header
+        className={`fixed inset-x-0 top-0 z-50 transition-colors duration-200 ${
+          scrolled ? "border-b border-border bg-background/85 backdrop-blur-md" : "border-b border-transparent"
+        }`}
+      >
+        <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-6">
+          <a href="#top" className="flex items-center gap-2.5 rounded-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring">
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-surface ring-1 ring-border">
+              <img src="/logo_BIPETech.png" alt="BIPETech" className="h-6 w-6 object-contain" />
+            </span>
+            <span className="font-heading text-lg font-bold tracking-tight">BIPETech</span>
+          </a>
+
+          <div className="hidden items-center gap-8 md:flex">
+            {NAV_LINKS.map((l) => (
+              <NavLink key={l.href} {...l} />
+            ))}
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={toggle}
+              aria-label={theme === "dark" ? "Ativar tema claro" : "Ativar tema escuro"}
+              className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+            >
+              {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            </button>
+            <a
+              href="#produtos"
+              className="hidden rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-transform hover:bg-primary-hover active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:inline-block"
+            >
+              Conhecer o ecossistema
+            </a>
+            <button
+              onClick={() => setMenuOpen((o) => !o)}
+              aria-label={menuOpen ? "Fechar menu" : "Abrir menu"}
+              aria-expanded={menuOpen}
+              className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground hover:bg-secondary md:hidden"
+            >
+              {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
           </div>
         </nav>
+
+        {menuOpen && (
+          <div className="border-t border-border bg-background px-5 py-4 md:hidden">
+            <div className="flex flex-col gap-4">
+              {NAV_LINKS.map((l) => (
+                <NavLink key={l.href} {...l} onClick={() => setMenuOpen(false)} />
+              ))}
+            </div>
+          </div>
+        )}
       </header>
 
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-blue-900 pt-24 pb-20 min-h-screen flex items-center">
-        <div className="container mx-auto px-6">
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-16">
+      {/* ===================== Hero ===================== */}
+      <section id="top" className="hero-mesh relative overflow-hidden pb-20 pt-32 sm:pb-28 sm:pt-40">
+        <div className="mx-auto max-w-3xl px-5 text-center sm:px-6">
+          <div className="reveal">
+            <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-3.5 py-1.5 text-[0.8125rem] font-medium text-muted-foreground">
+              <Sparkles className="h-3.5 w-3.5 text-accent" />
+              Tecnologia e IA aplicadas à educação
+            </span>
+          </div>
 
-              
-              <h1 className="text-6xl md:text-7xl font-bold text-gray-900 dark:text-white mb-8 leading-tight">
-                Grandes nomes estão <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800">
-                  migrando para a BIPETech
+          <h1 className="reveal mt-7 font-heading text-[clamp(2.5rem,6vw,4rem)] font-bold leading-[1.05]">
+            Transformamos conhecimento em{" "}
+            <span className="text-primary">conquista</span>
+          </h1>
+
+          <p className="reveal mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">
+            A BIPETech é o ecossistema brasileiro que conecta quem ensina a quem aprende.
+            Plataformas digitais que levam cada pessoa, de forma concreta, do conhecimento ao resultado.
+          </p>
+
+          <div className="reveal mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <a
+              href="#produtos"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-base font-semibold text-primary-foreground transition-transform hover:bg-primary-hover active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:w-auto"
+            >
+              Conhecer nossos produtos
+              <ArrowRight className="h-4 w-4" />
+            </a>
+            <a
+              href="#sobre"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-surface px-6 py-3 text-base font-semibold text-foreground transition-colors hover:bg-secondary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:w-auto"
+            >
+              Sobre a BIPETech
+            </a>
+          </div>
+        </div>
+
+        {/* Honest qualitative proof strip */}
+        <div className="reveal mx-auto mt-16 grid max-w-3xl grid-cols-1 gap-3 px-5 sm:grid-cols-3 sm:px-6">
+          {[
+            { icon: ShieldCheck, label: "Plataformas em produção" },
+            { icon: Zap, label: "IA aplicada, não vitrine" },
+            { icon: HeartHandshake, label: "Suporte humano" },
+          ].map(({ icon: Icon, label }) => (
+            <div key={label} className="flex items-center justify-center gap-2.5 rounded-xl border border-border bg-surface px-4 py-3 text-sm font-medium text-muted-foreground">
+              <Icon className="h-4 w-4 text-primary" />
+              {label}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ===================== Sobre ===================== */}
+      <section id="sobre" className="border-t border-border py-20 sm:py-28">
+        <div className="mx-auto max-w-6xl px-5 sm:px-6">
+          <div className="reveal mx-auto max-w-3xl text-center">
+            <Eyebrow>Quem somos</Eyebrow>
+            <h2 className="mt-3 font-heading text-[clamp(1.875rem,4vw,2.75rem)] font-bold">
+              Mais que software. Um ecossistema de educação.
+            </h2>
+            <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
+              A BIPETech atua como holding e guarda-chuva de plataformas voltadas ao ensino, à aprendizagem
+              e à transformação de carreiras. De um lado, infraestrutura para quem cria e distribui educação.
+              Do outro, experiências de estudo que sustentam o aluno até o resultado.
+            </p>
+          </div>
+
+          <div className="mt-14 grid gap-6 md:grid-cols-3">
+            {PILARES.map(({ titulo, descricao, icone: Icon }) => (
+              <div
+                key={titulo}
+                className="reveal rounded-2xl border border-border bg-card p-7 transition-transform duration-200 hover:-translate-y-1"
+              >
+                <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  <Icon className="h-6 w-6" />
                 </span>
-              </h1>
-              
-              <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-12 max-w-4xl mx-auto leading-relaxed">
-                Somos uma empresa de tecnologia que revoluciona a educação através da inovação e 
-                <strong className="text-blue-600 dark:text-blue-400"> inteligência artificial própria</strong>, 
-                conectando conhecimento, ensino e transformação digital.
-              </p>
-            </div>
+                <h3 className="mt-5 font-heading text-xl font-semibold">{titulo}</h3>
+                <p className="mt-3 leading-relaxed text-muted-foreground">{descricao}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-            {/* Stats Section */}
-            <div className="grid md:grid-cols-3 gap-8 mb-16">
-              <div className="text-center p-8 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-gray-700 shadow-lg">
-                <div className="text-4xl font-bold text-blue-600 dark:text-blue-400 mb-2">3</div>
-                <div className="text-gray-600 dark:text-gray-300 font-medium">empresas inovadoras</div>
-              </div>
-              <div className="text-center p-8 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-gray-700 shadow-lg">
-                <div className="text-4xl font-bold text-purple-600 dark:text-purple-400 mb-2">100%</div>
-                <div className="text-gray-600 dark:text-gray-300 font-medium">tecnologia própria</div>
-              </div>
-              <div className="text-center p-8 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl border border-gray-200 dark:border-gray-700 shadow-lg">
-                <div className="text-4xl font-bold text-green-600 dark:text-green-400 mb-2">∞</div>
-                <div className="text-gray-600 dark:text-gray-300 font-medium">possibilidades</div>
-              </div>
-            </div>
-            
-            <div className="flex flex-col sm:flex-row gap-6 justify-center">
-              <button 
-                onClick={() => scrollToSection('empresas')}
-                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-10 py-4 rounded-xl font-semibold text-lg transition-all transform hover:scale-105 shadow-xl"
+      {/* ===================== Produtos ===================== */}
+      <section id="produtos" className="border-t border-border bg-surface py-20 sm:py-28">
+        <div className="mx-auto max-w-6xl px-5 sm:px-6">
+          <div className="reveal mx-auto max-w-3xl text-center">
+            <Eyebrow>Nossos produtos</Eyebrow>
+            <h2 className="mt-3 font-heading text-[clamp(1.875rem,4vw,2.75rem)] font-bold">
+              Dois produtos, uma mesma tese
+            </h2>
+            <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
+              Plataforma que habilita a educação em escala e produto verticalizado que prova, em um nicho de
+              alta exigência, como tecnologia bem aplicada leva o aluno até o resultado.
+            </p>
+          </div>
+
+          <div className="mt-14 grid gap-6 lg:grid-cols-2">
+            {PRODUTOS.map((p) => {
+              const Icon = p.icone;
+              return (
+                <div
+                  key={p.nome}
+                  className={`${p.accentClass} reveal group flex flex-col rounded-2xl border border-border bg-card p-8 transition-transform duration-200 hover:-translate-y-1`}
+                  style={{ borderTop: "3px solid hsl(var(--pa))" }}
+                >
+                  <div className="flex items-center gap-4">
+                    <span className="flex h-14 w-14 items-center justify-center rounded-xl bg-accent-product-soft text-accent-product">
+                      <Icon className="h-7 w-7" />
+                    </span>
+                    <div>
+                      <h3 className="font-heading text-2xl font-bold">{p.nome}</h3>
+                      <p className="text-sm font-medium text-accent-product">{p.tagline}</p>
+                    </div>
+                  </div>
+
+                  <p className="mt-6 leading-relaxed text-muted-foreground">{p.descricao}</p>
+
+                  <ul className="mt-6 space-y-3">
+                    {p.bullets.map((b) => (
+                      <li key={b} className="flex items-start gap-3">
+                        <span className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-accent-product-soft">
+                          <Check className="h-3 w-3 text-accent-product" />
+                        </span>
+                        <span className="text-[0.95rem] text-foreground/90">{b}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <a
+                    href={p.ctaUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-8 inline-flex items-center justify-center gap-2 rounded-lg bg-accent-product px-6 py-3 text-base font-semibold text-[hsl(var(--pa-fg))] transition-transform hover:opacity-95 active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                  >
+                    {p.ctaLabel}
+                    <ArrowUpRight className="h-4 w-4" />
+                  </a>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ===================== Diferenciais (bento) ===================== */}
+      <section className="border-t border-border py-20 sm:py-28">
+        <div className="mx-auto max-w-6xl px-5 sm:px-6">
+          <div className="reveal mx-auto max-w-3xl text-center">
+            <Eyebrow>Por que BIPETech</Eyebrow>
+            <h2 className="mt-3 font-heading text-[clamp(1.875rem,4vw,2.75rem)] font-bold">
+              Tecnologia que serve ao aprendizado
+            </h2>
+          </div>
+
+          <div className="mt-14 grid gap-5 md:grid-cols-3 md:auto-rows-fr">
+            {DIFERENCIAIS.map(({ titulo, descricao, icone: Icon, large }) => (
+              <div
+                key={titulo}
+                className={`reveal relative overflow-hidden rounded-2xl border border-border p-7 transition-transform duration-200 hover:-translate-y-1 ${
+                  large ? "bg-card md:col-span-2 md:row-span-2" : "bg-card"
+                }`}
               >
-                <i className="fas fa-rocket mr-3"></i>
-                Conheça Nossas Empresas
-              </button>
-              <button 
-                onClick={() => scrollToSection('sobre')}
-                className="border-2 border-blue-600 dark:border-blue-400 text-blue-600 dark:text-blue-400 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-400 dark:hover:text-gray-900 px-10 py-4 rounded-xl font-semibold text-lg transition-all"
-              >
-                <i className="fas fa-info-circle mr-3"></i>
-                Saiba Mais
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* About Section */}
-      <section id="sobre" className="py-20 bg-gray-50 dark:bg-gray-800">
-        <div className="container mx-auto px-6">
-          <div className="max-w-6xl mx-auto text-center mb-16">
-            <h2 className="text-5xl md:text-6xl font-bold text-gray-900 dark:text-white mb-8">
-              A solução de <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">ponta a ponta</span> mais fácil e rápida
-            </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300 leading-relaxed max-w-4xl mx-auto">
-              Uma só empresa que reúne tudo o que você precisa para transformar a educação através da tecnologia. 
-              <strong className="text-blue-600 dark:text-blue-400"> Nossa IA própria potencializa</strong> cada uma de nossas soluções, 
-              criando ecossistemas educacionais que revolucionam o ensino e aprendizagem.
-            </p>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            <div className="group text-center p-8 bg-white dark:bg-gray-700 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 dark:border-gray-600">
-              <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-                <i className="fas fa-lightbulb text-white text-3xl"></i>
-              </div>
-              <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Inovação Contínua</h3>
-              <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed">
-                Desenvolvemos tecnologias educacionais disruptivas que antecipam as necessidades do ensino e 
-                <strong className="text-blue-600 dark:text-blue-400"> revolucionam a educação</strong>.
-              </p>
-            </div>
-            
-            <div className="group text-center p-8 bg-white dark:bg-gray-700 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 dark:border-gray-600">
-              <div className="w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-                <i className="fas fa-brain text-white text-3xl"></i>
-              </div>
-              <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">IA Proprietária</h3>
-              <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed">
-                Nossa inteligência artificial própria impulsiona cada solução educacional que criamos, 
-                <strong className="text-purple-600 dark:text-purple-400"> oferecendo vantagem única no ensino</strong>.
-              </p>
-            </div>
-            
-            <div className="group text-center p-8 bg-white dark:bg-gray-700 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-200 dark:border-gray-600">
-              <div className="w-20 h-20 bg-gradient-to-r from-green-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-                <i className="fas fa-network-wired text-white text-3xl"></i>
-              </div>
-              <h3 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Ecossistema Integrado</h3>
-              <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed">
-                Conectamos diferentes áreas educacionais através de um ecossistema tecnológico robusto que 
-                <strong className="text-green-600 dark:text-green-400"> maximiza o aprendizado</strong>.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Companies Section */}
-      <section id="empresas" className="py-20 bg-white dark:bg-gray-900">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-5xl md:text-6xl font-bold text-gray-900 dark:text-white mb-8">
-              Nossas <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Empresas</span>
-            </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed">
-              Três soluções inovadoras que formam nosso ecossistema educacional. 
-              <strong className="text-blue-600 dark:text-blue-400"> Ferramentas completas</strong> que reúnem tudo o que você precisa 
-              para transformar a educação e o ensino através da tecnologia.
-            </p>
-          </div>
-          
-          <div className="grid lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
-            
-            {/* DireitoHub */}
-            <div className="group bg-white dark:bg-gray-800 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 p-8 border border-gray-200 dark:border-gray-700 hover:border-green-500 dark:hover:border-green-400">
-              <div className="flex items-center mb-8">
-                <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300 shadow-md border border-gray-200 dark:border-gray-600">
-                  <img 
-                    src="/logo_direitoHub.png" 
-                    alt="DireitoHub Logo" 
-                    className="w-12 h-12 object-contain"
+                {large && (
+                  <div
+                    className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full"
+                    style={{ background: "radial-gradient(closest-side, hsl(var(--brand-accent) / 0.18), transparent)" }}
+                    aria-hidden
                   />
-                </div>
-                <h3 className="text-3xl font-bold text-gray-900 dark:text-white">DireitoHub</h3>
+                )}
+                <span
+                  className={`flex items-center justify-center rounded-xl ${
+                    large ? "h-14 w-14 bg-accent/15 text-accent" : "h-12 w-12 bg-primary/10 text-primary"
+                  }`}
+                >
+                  <Icon className={large ? "h-7 w-7" : "h-6 w-6"} />
+                </span>
+                <h3 className={`mt-5 font-heading font-semibold ${large ? "text-2xl" : "text-lg"}`}>{titulo}</h3>
+                <p className="mt-3 leading-relaxed text-muted-foreground">{descricao}</p>
               </div>
-              
-              <p className="text-green-600 dark:text-green-400 font-bold mb-8 text-xl leading-relaxed">
-                Encontre o advogado ideal para sua necessidade jurídica, de forma rápida, segura e online.
-              </p>
-              
-              <ul className="space-y-4 mb-10">
-                <li className="flex items-start">
-                  <div className="w-6 h-6 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mr-4 mt-0.5 flex-shrink-0">
-                    <i className="fas fa-check text-green-600 dark:text-green-400 text-sm"></i>
-                  </div>
-                  <span className="text-gray-700 dark:text-gray-300 text-lg">Plataforma moderna para busca e agendamento de consultas jurídicas</span>
-                </li>
-                <li className="flex items-start">
-                  <div className="w-6 h-6 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mr-4 mt-0.5 flex-shrink-0">
-                    <i className="fas fa-check text-green-600 dark:text-green-400 text-sm"></i>
-                  </div>
-                  <span className="text-gray-700 dark:text-gray-300 text-lg">Perfis completos de advogados, áreas de atuação e avaliações reais</span>
-                </li>
-                <li className="flex items-start">
-                  <div className="w-6 h-6 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mr-4 mt-0.5 flex-shrink-0">
-                    <i className="fas fa-check text-green-600 dark:text-green-400 text-sm"></i>
-                  </div>
-                  <span className="text-gray-700 dark:text-gray-300 text-lg">Atendimento online e presencial, com agilidade e segurança</span>
-                </li>
-                <li className="flex items-start">
-                  <div className="w-6 h-6 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mr-4 mt-0.5 flex-shrink-0">
-                    <i className="fas fa-check text-green-600 dark:text-green-400 text-sm"></i>
-                  </div>
-                  <span className="text-gray-700 dark:text-gray-300 text-lg">Ferramentas para facilitar o contato e acompanhamento do cliente</span>
-                </li>
-                <li className="flex items-start">
-                  <div className="w-6 h-6 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mr-4 mt-0.5 flex-shrink-0">
-                    <i className="fas fa-check text-green-600 dark:text-green-400 text-sm"></i>
-                  </div>
-                  <span className="text-gray-700 dark:text-gray-300 text-lg">Interface intuitiva, responsiva e acessível</span>
-                </li>
-              </ul>
-              
-              <button 
-                onClick={() => window.open('https://www.direitohub.com.br/', '_blank')}
-                className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white py-4 rounded-xl font-bold text-lg transition-all transform hover:scale-105 shadow-lg cursor-pointer"
-              >
-                <i className="fas fa-arrow-right mr-3"></i>
-                Conhecer DireitoHub
-              </button>
-            </div>
-            
-            {/* Marketplace */}
-            <div className="group bg-white dark:bg-gray-800 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 p-8 border border-gray-200 dark:border-gray-700 hover:border-purple-500 dark:hover:border-purple-400">
-              <div className="flex items-center mb-8">
-                <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300 shadow-md border border-gray-200 dark:border-gray-600">
-                  <img 
-                    src="/logo_MarketPlace.png" 
-                    alt="Marketplace Logo" 
-                    className="w-12 h-12 object-contain"
-                  />
-                </div>
-                <h3 className="text-3xl font-bold text-gray-900 dark:text-white">Marketplace</h3>
-              </div>
-              
-              <p className="text-purple-600 dark:text-purple-400 font-bold mb-8 text-xl leading-relaxed">
-                Crie, venda e assista cursos online de forma simples, moderna e profissional!
-              </p>
-              
-              <ul className="space-y-4 mb-10">
-                <li className="flex items-start">
-                  <div className="w-6 h-6 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center mr-4 mt-0.5 flex-shrink-0">
-                    <i className="fas fa-check text-purple-600 dark:text-purple-400 text-sm"></i>
-                  </div>
-                  <span className="text-gray-700 dark:text-gray-300 text-lg">Plataforma completa para criadores e educadores</span>
-                </li>
-                <li className="flex items-start">
-                  <div className="w-6 h-6 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center mr-4 mt-0.5 flex-shrink-0">
-                    <i className="fas fa-check text-purple-600 dark:text-purple-400 text-sm"></i>
-                  </div>
-                  <span className="text-gray-700 dark:text-gray-300 text-lg">Player responsivo com aulas ao vivo e gravadas</span>
-                </li>
-                <li className="flex items-start">
-                  <div className="w-6 h-6 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center mr-4 mt-0.5 flex-shrink-0">
-                    <i className="fas fa-check text-purple-600 dark:text-purple-400 text-sm"></i>
-                  </div>
-                  <span className="text-gray-700 dark:text-gray-300 text-lg">Interface moderna e otimizada para conversão</span>
-                </li>
-                <li className="flex items-start">
-                  <div className="w-6 h-6 bg-purple-100 dark:bg-purple-900/30 rounded-full flex items-center justify-center mr-4 mt-0.5 flex-shrink-0">
-                    <i className="fas fa-check text-purple-600 dark:text-purple-400 text-sm"></i>
-                  </div>
-                  <span className="text-gray-700 dark:text-gray-300 text-lg">Ideal para monetizar conhecimento especializado</span>
-                </li>
-              </ul>
-              
-              <button className="w-full bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white py-4 rounded-xl font-bold text-lg transition-all transform hover:scale-105 shadow-lg">
-                <i className="fas fa-arrow-right mr-3"></i>
-                Conhecer Marketplace
-              </button>
-            </div>
-            
-            {/* BIPE Plataforma */}
-            <div className="group bg-white dark:bg-gray-800 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 p-8 border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400">
-              <div className="flex items-center mb-8">
-                <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300 shadow-md border border-gray-200 dark:border-gray-600">
-                  <img 
-                    src="/logo_BIPEPlataforma.png" 
-                    alt="BIPE Plataforma Logo" 
-                    className="w-12 h-12 object-contain"
-                  />
-                </div>
-                <h3 className="text-3xl font-bold text-gray-900 dark:text-white">BIPE Plataforma</h3>
-              </div>
-              
-              <p className="text-blue-600 dark:text-blue-400 font-bold mb-8 text-xl leading-relaxed">
-                Plataforma completa para instituições de ensino superior com tudo o que precisam para transformar a educação!
-              </p>
-              
-              <ul className="space-y-4 mb-10">
-                <li className="flex items-start">
-                  <div className="w-6 h-6 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mr-4 mt-0.5 flex-shrink-0">
-                    <i className="fas fa-check text-blue-600 dark:text-blue-400 text-sm"></i>
-                  </div>
-                  <span className="text-gray-700 dark:text-gray-300 text-lg">Ambiente completo para disponibilizar aulas e conteúdos</span>
-                </li>
-                <li className="flex items-start">
-                  <div className="w-6 h-6 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mr-4 mt-0.5 flex-shrink-0">
-                    <i className="fas fa-check text-blue-600 dark:text-blue-400 text-sm"></i>
-                  </div>
-                  <span className="text-gray-700 dark:text-gray-300 text-lg">Gestão de projetos acadêmicos e pesquisa</span>
-                </li>
-                <li className="flex items-start">
-                  <div className="w-6 h-6 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mr-4 mt-0.5 flex-shrink-0">
-                    <i className="fas fa-check text-blue-600 dark:text-blue-400 text-sm"></i>
-                  </div>
-                  <span className="text-gray-700 dark:text-gray-300 text-lg">Sistema integrado para instituições de ensino superior</span>
-                </li>
-                <li className="flex items-start">
-                  <div className="w-6 h-6 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mr-4 mt-0.5 flex-shrink-0">
-                    <i className="fas fa-check text-blue-600 dark:text-blue-400 text-sm"></i>
-                  </div>
-                  <span className="text-gray-700 dark:text-gray-300 text-lg">Ferramentas de IA para potencializar o ensino</span>
-                </li>
-              </ul>
-              
-              <button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-4 rounded-xl font-bold text-lg transition-all transform hover:scale-105 shadow-lg">
-                <i className="fas fa-arrow-right mr-3"></i>
-                Conhecer BIPE Plataforma
-              </button>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Mission Vision Values */}
-      <section id="missao" className="py-20 bg-gray-50 dark:bg-gray-800">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-5xl md:text-6xl font-bold text-gray-900 dark:text-white mb-8">
-              Nossos <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Princípios</span>
+      {/* ===================== Princípios ===================== */}
+      <section id="principios" className="border-t border-border bg-surface py-20 sm:py-28">
+        <div className="mx-auto max-w-6xl px-5 sm:px-6">
+          <div className="reveal mx-auto max-w-3xl text-center">
+            <Eyebrow>Nossos princípios</Eyebrow>
+            <h2 className="mt-3 font-heading text-[clamp(1.875rem,4vw,2.75rem)] font-bold">
+              No que acreditamos
             </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed">
-              Os valores que guiam nossa jornada de inovação e crescimento sustentável, 
-              <strong className="text-blue-600 dark:text-blue-400">construindo o futuro da tecnologia</strong> no Brasil.
-            </p>
           </div>
-          
-          <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
-            
-            {/* Missão */}
-            <div className="group bg-white dark:bg-gray-700 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 p-10 border border-gray-200 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-400">
-              <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-8 group-hover:scale-110 transition-transform duration-300">
-                <i className="fas fa-target text-white text-3xl"></i>
-              </div>
-              <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-6 text-center">Missão</h3>
-              <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed text-center">
-                Democratizar o acesso à <strong className="text-blue-600 dark:text-blue-400">tecnologia de ponta</strong>, 
-                capacitando profissionais e empresas a transformarem conhecimento em oportunidades reais 
-                através de nossas soluções integradas de inteligência artificial.
+
+          <div className="mt-14 grid gap-6 lg:grid-cols-2">
+            <div className="reveal rounded-2xl border border-border bg-card p-8">
+              <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                <Target className="h-6 w-6" />
+              </span>
+              <h3 className="mt-5 font-heading text-xl font-semibold">Missão</h3>
+              <p className="mt-3 leading-relaxed text-muted-foreground">
+                Aplicar tecnologia e inteligência artificial à educação para conectar quem ensina a quem aprende
+                e levar cada pessoa, de forma concreta, do conhecimento ao resultado.
               </p>
             </div>
-            
-            {/* Visão */}
-            <div className="group bg-white dark:bg-gray-700 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 p-10 border border-gray-200 dark:border-gray-600 hover:border-purple-500 dark:hover:border-purple-400">
-              <div className="w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-8 group-hover:scale-110 transition-transform duration-300">
-                <i className="fas fa-eye text-white text-3xl"></i>
-              </div>
-              <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-6 text-center">Visão</h3>
-              <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed text-center">
-                Ser reconhecida como a <strong className="text-purple-600 dark:text-purple-400">principal holding de tecnologia</strong> 
-                do Brasil, liderando a revolução digital através da inovação contínua e criando um 
-                ecossistema que conecta conhecimento, tecnologia e crescimento.
+            <div className="reveal rounded-2xl border border-border bg-card p-8">
+              <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent/15 text-accent">
+                <Eye className="h-6 w-6" />
+              </span>
+              <h3 className="mt-5 font-heading text-xl font-semibold">Visão</h3>
+              <p className="mt-3 leading-relaxed text-muted-foreground">
+                Ser o ecossistema brasileiro de referência em tecnologia educacional, reconhecido por transformar
+                aprendizado em conquistas reais — de carreiras construídas a aprovações conquistadas.
               </p>
             </div>
-            
-            {/* Valores */}
-            <div className="group bg-white dark:bg-gray-700 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 p-10 border border-gray-200 dark:border-gray-600 hover:border-green-500 dark:hover:border-green-400">
-              <div className="w-20 h-20 bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-8 group-hover:scale-110 transition-transform duration-300">
-                <i className="fas fa-heart text-white text-3xl"></i>
+          </div>
+
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+            {VALORES.map(({ titulo, descricao, icone: Icon }) => (
+              <div key={titulo} className="reveal rounded-2xl border border-border bg-card p-6">
+                <Icon className="h-6 w-6 text-primary" />
+                <h4 className="mt-4 font-heading text-base font-semibold leading-snug">{titulo}</h4>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{descricao}</p>
               </div>
-              <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-6 text-center">Valores</h3>
-              <div className="space-y-4">
-                <div className="flex items-center">
-                  <div className="w-6 h-6 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-                    <i className="fas fa-check text-green-600 dark:text-green-400 text-sm"></i>
-                  </div>
-                  <span className="text-gray-700 dark:text-gray-300 text-lg font-medium">Inovação Constante</span>
-                </div>
-                <div className="flex items-center">
-                  <div className="w-6 h-6 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-                    <i className="fas fa-check text-green-600 dark:text-green-400 text-sm"></i>
-                  </div>
-                  <span className="text-gray-700 dark:text-gray-300 text-lg font-medium">Excelência Técnica</span>
-                </div>
-                <div className="flex items-center">
-                  <div className="w-6 h-6 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-                    <i className="fas fa-check text-green-600 dark:text-green-400 text-sm"></i>
-                  </div>
-                  <span className="text-gray-700 dark:text-gray-300 text-lg font-medium">Transparência</span>
-                </div>
-                <div className="flex items-center">
-                  <div className="w-6 h-6 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-                    <i className="fas fa-check text-green-600 dark:text-green-400 text-sm"></i>
-                  </div>
-                  <span className="text-gray-700 dark:text-gray-300 text-lg font-medium">Impacto Social</span>
-                </div>
-                <div className="flex items-center">
-                  <div className="w-6 h-6 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
-                    <i className="fas fa-check text-green-600 dark:text-green-400 text-sm"></i>
-                  </div>
-                  <span className="text-gray-700 dark:text-gray-300 text-lg font-medium">Colaboração</span>
-                </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ===================== CTA ===================== */}
+      <section id="contato" className="py-20 sm:py-28">
+        <div className="mx-auto max-w-6xl px-5 sm:px-6">
+          <div
+            className="reveal relative overflow-hidden rounded-3xl px-6 py-16 text-center sm:px-12"
+            style={{ background: "linear-gradient(135deg, hsl(198 80% 30%), hsl(198 84% 22%))" }}
+          >
+            <div
+              className="pointer-events-none absolute inset-0"
+              style={{ background: "radial-gradient(60% 80% at 80% 0%, hsl(var(--brand-accent) / 0.18), transparent 60%)" }}
+              aria-hidden
+            />
+            <div className="relative mx-auto max-w-2xl">
+              <h2 className="font-heading text-[clamp(1.75rem,4vw,2.5rem)] font-bold text-white">
+                Conhecimento vira conquista quando a tecnologia é bem aplicada
+              </h2>
+              <p className="mt-5 text-lg leading-relaxed text-white/85">
+                Seja para construir uma fonte de renda ensinando ou conquistar a aprovação que muda uma carreira,
+                há um produto BIPETech para o seu objetivo.
+              </p>
+              <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                <a
+                  href="https://conectaeduca.com.br"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-accent px-6 py-3 text-base font-semibold text-accent-foreground transition-transform hover:opacity-95 active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:w-auto"
+                >
+                  Acessar ConectaEduca
+                  <ArrowUpRight className="h-4 w-4" />
+                </a>
+                <a
+                  href="https://treinadoroab.com.br"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-white/40 px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-white/10 active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:w-auto"
+                >
+                  Acessar TreinadorOAB
+                  <ArrowUpRight className="h-4 w-4" />
+                </a>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-
-
-      {/* CTA Section */}
-      <section className="bg-gradient-to-br from-blue-600 via-purple-600 to-blue-800 py-24">
-        <div className="container mx-auto px-6 text-center">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-5xl md:text-6xl font-bold text-white mb-8 leading-tight">
-              Pronto para <span className="text-yellow-300">Transformar</span> sua Educação?
-            </h2>
-            <p className="text-xl md:text-2xl text-blue-100 mb-12 leading-relaxed">
-              Junte-se ao ecossistema BIPETech e descubra como nossas soluções podem 
-              <strong className="text-yellow-300"> revolucionar sua instituição de ensino</strong> através da tecnologia e inovação educacional.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-6 justify-center">
-              <button className="bg-white text-blue-600 px-10 py-4 rounded-xl font-bold text-lg hover:bg-yellow-300 hover:text-blue-800 transition-all transform hover:scale-105 shadow-2xl">
-                <i className="fas fa-rocket mr-3"></i>
-                Começar Agora
-              </button>
-              <button className="border-2 border-white text-white hover:bg-white hover:text-blue-600 px-10 py-4 rounded-xl font-bold text-lg transition-all transform hover:scale-105">
-                <i className="fas fa-calendar mr-3"></i>
-                Agendar Demonstração
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-gray-900 dark:bg-black text-gray-400 py-16">
-        <div className="container mx-auto px-6">
-          <div className="grid md:grid-cols-4 gap-12 mb-12">
-            
-            {/* Logo and Description */}
+      {/* ===================== Footer ===================== */}
+      <footer className="border-t border-border bg-surface">
+        <div className="mx-auto max-w-6xl px-5 py-14 sm:px-6">
+          <div className="grid gap-10 md:grid-cols-4">
             <div className="md:col-span-2">
-              <div className="flex items-center space-x-3 mb-6">
-                <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                  <i className="fas fa-brain text-white text-xl"></i>
-                </div>
-                <span className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-                  BIPETech
+              <div className="flex items-center gap-2.5">
+                <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-background ring-1 ring-border">
+                  <img src="/logo_BIPETech.png" alt="BIPETech" className="h-6 w-6 object-contain" />
                 </span>
+                <span className="font-heading text-lg font-bold tracking-tight">BIPETech</span>
               </div>
-              <p className="text-gray-400 mb-8 max-w-md text-lg leading-relaxed">
-                Empresa de tecnologia focada em soluções educacionais e inteligência artificial, 
-                <strong className="text-blue-400"> transformando o ensino</strong> através da inovação digital.
+              <p className="mt-4 max-w-sm leading-relaxed text-muted-foreground">
+                O ecossistema de tecnologia e IA que transforma conhecimento em conquista.
               </p>
-              <div className="flex space-x-6">
-                <div className="w-10 h-10 bg-gray-800 hover:bg-blue-600 rounded-lg flex items-center justify-center transition-all duration-300 cursor-pointer">
-                  <i className="fab fa-linkedin text-gray-400 hover:text-white text-lg"></i>
-                </div>
-                <div className="w-10 h-10 bg-gray-800 hover:bg-blue-400 rounded-lg flex items-center justify-center transition-all duration-300 cursor-pointer">
-                  <i className="fab fa-twitter text-gray-400 hover:text-white text-lg"></i>
-                </div>
-                <div className="w-10 h-10 bg-gray-800 hover:bg-gray-700 rounded-lg flex items-center justify-center transition-all duration-300 cursor-pointer">
-                  <i className="fab fa-github text-gray-400 hover:text-white text-lg"></i>
-                </div>
-                <div className="w-10 h-10 bg-gray-800 hover:bg-pink-600 rounded-lg flex items-center justify-center transition-all duration-300 cursor-pointer">
-                  <i className="fab fa-instagram text-gray-400 hover:text-white text-lg"></i>
-                </div>
+              <div className="mt-6 flex gap-2">
+                {[
+                  { icon: Linkedin, label: "LinkedIn" },
+                  { icon: Instagram, label: "Instagram" },
+                  { icon: Mail, label: "E-mail" },
+                ].map(({ icon: Icon, label }) => (
+                  <a
+                    key={label}
+                    href="#contato"
+                    aria-label={label}
+                    className="flex h-10 w-10 items-center justify-center rounded-lg border border-border text-muted-foreground transition-colors hover:bg-primary hover:text-primary-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                  >
+                    <Icon className="h-5 w-5" />
+                  </a>
+                ))}
               </div>
             </div>
-            
-            {/* Companies */}
+
             <div>
-              <h4 className="text-white font-bold text-lg mb-6">Nossas Empresas</h4>
-              <ul className="space-y-4">
-                <li><a href="https://www.direitohub.com.br/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-blue-400 transition-colors text-lg">DireitoHub</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-purple-400 transition-colors text-lg">Marketplace</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-blue-400 transition-colors text-lg">BIPE Plataforma</a></li>
+              <h4 className="font-heading text-sm font-semibold">Produtos</h4>
+              <ul className="mt-4 space-y-3 text-sm">
+                <li>
+                  <a href="https://conectaeduca.com.br" target="_blank" rel="noopener noreferrer" className="text-muted-foreground transition-colors hover:text-foreground">
+                    ConectaEduca
+                  </a>
+                </li>
+                <li>
+                  <a href="https://treinadoroab.com.br" target="_blank" rel="noopener noreferrer" className="text-muted-foreground transition-colors hover:text-foreground">
+                    TreinadorOAB
+                  </a>
+                </li>
               </ul>
             </div>
-            
-            {/* Contact */}
+
             <div>
-              <h4 className="text-white font-bold text-lg mb-6">Contato</h4>
-              <ul className="space-y-4">
-                <li><a href="#" className="text-gray-400 hover:text-blue-400 transition-colors text-lg">Fale Conosco</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-blue-400 transition-colors text-lg">Suporte</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-blue-400 transition-colors text-lg">Carreiras</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-blue-400 transition-colors text-lg">Imprensa</a></li>
+              <h4 className="font-heading text-sm font-semibold">Empresa</h4>
+              <ul className="mt-4 space-y-3 text-sm">
+                <li><a href="#sobre" className="text-muted-foreground transition-colors hover:text-foreground">Sobre</a></li>
+                <li><a href="#principios" className="text-muted-foreground transition-colors hover:text-foreground">Missão e valores</a></li>
+                <li><a href="#contato" className="text-muted-foreground transition-colors hover:text-foreground">Contato</a></li>
               </ul>
             </div>
           </div>
-          
-          <div className="border-t border-gray-800 pt-8">
-            <div className="flex flex-col md:flex-row justify-between items-center">
-              <p className="text-gray-500 text-lg">&copy; 2025 BIPETech. Todos os direitos reservados.</p>
-              <div className="flex space-x-6 mt-4 md:mt-0">
-                <a href="#" className="text-gray-500 hover:text-blue-400 transition-colors">Política de Privacidade</a>
-                <a href="#" className="text-gray-500 hover:text-blue-400 transition-colors">Termos de Uso</a>
-              </div>
-            </div>
+
+          <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-border pt-6 sm:flex-row">
+            <p className="text-sm text-muted-foreground">
+              © 2026 BIPETech. Tecnologia educacional brasileira. Todos os direitos reservados.
+            </p>
           </div>
         </div>
       </footer>

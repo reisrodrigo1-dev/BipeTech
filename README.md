@@ -1,27 +1,22 @@
 # BIPETech - Site Institucional
 
-Site institucional da BIPETech, empresa de tecnologia focada em soluções educacionais com inteligência artificial própria.
+Site institucional da **BIPETech**, empresa brasileira de tecnologia educacional que atua como holding e guarda-chuva de plataformas digitais voltadas ao ensino, à aprendizagem e à transformação de carreiras.
 
 ## 🚀 Sobre o Projeto
 
-A BIPETech é uma empresa de tecnologia que revoluciona a educação através da inovação e inteligência artificial própria, conectando conhecimento, ensino e transformação digital.
+A BIPETech aplica tecnologia e inteligência artificial à educação para conectar quem ensina a quem aprende e levar cada pessoa, de forma concreta, do conhecimento ao resultado. O site é uma landing page institucional que apresenta a empresa e seus produtos.
 
-### Nossas Soluções
+### Nossos Produtos
 
-1. **DireitoHub** - Plataforma que conecta advogados e clientes
-   - Busca e agendamento de consultas jurídicas
-   - Perfis profissionais detalhados com avaliações reais
-   - Atendimento online e presencial
+1. **ConectaEduca** — A plataforma completa de educação digital ([conectaeduca.com.br](https://conectaeduca.com.br))
+   - Marketplace de dois lados: criadores que vendem e alunos que aprendem
+   - Criação e venda de cursos, com player de aulas ao vivo e gravadas
+   - Pagamentos, analytics e monetização integrados
 
-2. **Marketplace** - Plataforma completa para criadores e educadores
-   - Criação e venda de cursos online
-   - Ferramentas de gestão e analytics
-   - Sistema de pagamentos integrado
-
-3. **BIPE Plataforma** - Solução completa para instituições de ensino superior
-   - Ambiente para disponibilizar aulas e conteúdos
-   - Gestão de projetos acadêmicos
-   - Ferramentas de IA para potencializar o ensino
+2. **TreinadorOAB** — Acompanhamento de estudos para a 1ª fase da OAB ([treinadoroab.com.br](https://treinadoroab.com.br))
+   - Método "Destranque sua Aprovação"
+   - Organização diária dos estudos, constância e apoio emocional
+   - Rádio TreinadorOAB: dicas, correção de questões, notícias e jurisprudência
 
 ## 🛠️ Tecnologias Utilizadas
 
@@ -67,13 +62,14 @@ O projeto estará disponível em `http://localhost:5000`
 
 ## 🎨 Design
 
-O site foi desenvolvido com design moderno inspirado no HeroSpark, featuring:
-- Hero section impactante com gradientes
-- Cards interativos para as empresas
-- Seções de missão, visão e valores
-- Call-to-action vibrante
-- Footer moderno com redes sociais
-- Design responsivo e acessível
+Sistema de design próprio, premium e coeso:
+- **Identidade**: azul-petróleo profundo (marca-mãe) + acento âmbar pontual, fugindo do gradiente azul-roxo genérico
+- **Cores de produto**: violeta-magenta (ConectaEduca) e esmeralda-jade (TreinadorOAB)
+- **Tipografia**: Sora (títulos) + Inter (corpo)
+- **Ícones**: Lucide (SVG), sem emojis
+- **Dark mode** com tokens semânticos (redesenhado, não invertido)
+- Animações sutis (transform/opacity), reveal-on-scroll e respeito a `prefers-reduced-motion`
+- Acessibilidade: contraste AA, foco visível por teclado, viewport com zoom habilitado
 
 ## 📱 Responsividade
 
