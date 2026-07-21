@@ -9,14 +9,20 @@ A BIPETech aplica tecnologia e inteligência artificial à educação para conec
 ### Nossos Produtos
 
 1. **ConectaEduca** — A plataforma completa de educação digital ([conectaeduca.com.br](https://conectaeduca.com.br))
-   - Marketplace de dois lados: criadores que vendem e alunos que aprendem
-   - Criação e venda de cursos, com player de aulas ao vivo e gravadas
-   - Pagamentos, analytics e monetização integrados
+   - Marketplace de dois lados: criadores publicam e vendem, alunos compram e aprendem
+   - Cursos, mentorias com agenda, eventos e ebooks em um só portal
+   - **PAP**: assistente de IA (Claude) que estrutura o curso por conversa e gera a página de vendas
+   - Sales Studio e Capture Studio: páginas de vendas e de captura próprias, com domínio customizado
+   - Checkout Mercado Pago (PIX, boleto, cartão parcelado) com **split automático** para o criador
+   - Videochamada de mentoria (Daily.co), transmissão ao vivo, certificados com validação pública e fórum por aula
 
-2. **TreinadorOAB** — Acompanhamento de estudos para a 1ª fase da OAB ([treinadoroab.com.br](https://treinadoroab.com.br))
-   - Método "Destranque sua Aprovação"
-   - Organização diária dos estudos, constância e apoio emocional
-   - Rádio TreinadorOAB: dicas, correção de questões, notícias e jurisprudência
+2. **TreinadorOAB** — Preparação para o Exame da OAB, nas duas fases ([treinadoroab.com.br](https://treinadoroab.com.br))
+   - **Correção da 2ª fase por IA** (Claude): peças e questões discursivas avaliadas item a item contra a rubrica oficial, com normalização determinística das notas
+   - **Módulo de recurso**: leitura automática do espelho oficial da FGV e cálculo da margem recursal
+   - Banco de questões, simulados e treino livre gamificado da 1ª fase
+   - OCR da folha de respostas via Claude Vision (extrai as 80 respostas de uma foto)
+   - **Clara**: assistente de IA para alunos; correção ao vivo e eventos diagnósticos
+   - Portais white-label para instituições parceiras (turmas, professores e relatórios próprios)
 
 ## 🛠️ Tecnologias Utilizadas
 

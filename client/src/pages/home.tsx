@@ -13,10 +13,9 @@ import {
   Store,
   Scale,
   Sparkles,
-  Radio,
+  Video,
+  ScanLine,
   CreditCard,
-  BarChart3,
-  CalendarCheck,
   Target,
   Eye,
   Cpu,
@@ -157,12 +156,13 @@ const PRODUTOS = [
     nome: "ConectaEduca",
     tagline: "A plataforma completa de educação digital",
     descricao:
-      "Um marketplace de dois lados: dá a criadores e educadores as ferramentas para produzir, vender e monetizar cursos e conteúdo, e a alunos um universo amplo de conhecimento profissional relevante.",
+      "Marketplace de dois lados: criadores publicam cursos, mentorias, eventos e ebooks com página de vendas, captura de leads e checkout próprios. Alunos compram, assistem e acompanham tudo em um único portal.",
     bullets: [
-      "Criação e venda de cursos em um só lugar",
-      "Player de aulas ao vivo e gravadas",
-      "Pagamentos, analytics e monetização integrados",
-      "Feito para criadores e alunos — os dois lados do mercado",
+      "Cursos, mentorias, eventos e ebooks em uma só plataforma",
+      "PAP: assistente de IA que estrutura o curso e gera a página de vendas",
+      "Checkout próprio com PIX, boleto e cartão parcelado",
+      "Split automático: o criador recebe direto na sua conta",
+      "Mentoria com agenda e videochamada, aulas ao vivo e certificados verificáveis",
     ],
     ctaLabel: "Acessar ConectaEduca",
     ctaUrl: "https://conectaeduca.com.br",
@@ -171,14 +171,15 @@ const PRODUTOS = [
   },
   {
     nome: "TreinadorOAB",
-    tagline: "Acompanhamento de estudos para a 1ª fase da OAB",
+    tagline: "Preparação para o Exame da OAB, nas duas fases",
     descricao:
-      "Vai além do conteúdo. Guiada pelo método “Destranque sua Aprovação”, organiza a rotina diária, sustenta a constância e cuida do lado emocional da jornada — com método, ritmo e apoio até a aprovação.",
+      "Treino e correção para a 1ª e a 2ª fase. A IA avalia peças e questões discursivas item a item contra a rubrica oficial, e o módulo de recurso lê o espelho da FGV para calcular sua margem recursal.",
     bullets: [
-      "Método “Destranque sua Aprovação”",
-      "Organização diária dos estudos e constância",
-      "Apoio emocional ao longo da jornada",
-      "Rádio TreinadorOAB: dicas, correção de questões e jurisprudência",
+      "Correção da 2ª fase por IA, com nota por item e feedback estruturado",
+      "Análise de recurso: leitura do espelho oficial e cálculo da margem recursal",
+      "Banco de questões, simulados e treino livre gamificado da 1ª fase",
+      "Leitura automática do gabarito a partir da foto da folha de respostas",
+      "Clara, assistente de IA, e portais próprios para instituições parceiras",
     ],
     ctaLabel: "Acessar TreinadorOAB",
     ctaUrl: "https://treinadoroab.com.br",
@@ -189,16 +190,16 @@ const PRODUTOS = [
 
 const DIFERENCIAIS: { titulo: string; descricao: string; icone: LucideIcon; large?: boolean }[] = [
   {
-    titulo: "IA aplicada à educação",
+    titulo: "IA que faz o trabalho, não enfeite",
     descricao:
-      "Inteligência artificial como camada que organiza estudos, personaliza jornadas e amplia o alcance de educadores — não como vitrine.",
+      "A mesma tecnologia que corrige uma peça da 2ª fase item a item contra a rubrica oficial também estrutura um curso inteiro conversando com o criador e gera a página de vendas. IA como parte do produto, não como vitrine.",
     icone: Sparkles,
     large: true,
   },
-  { titulo: "Player ao vivo e gravado", descricao: "Aulas com qualidade e fluidez para criadores e alunos.", icone: BarChart3 },
-  { titulo: "Pagamentos e monetização", descricao: "Infraestrutura para transformar conhecimento em renda.", icone: CreditCard },
-  { titulo: "Acompanhamento de estudos", descricao: "Rotina, constância e método guiando o aluno até o resultado.", icone: CalendarCheck },
-  { titulo: "Rádio e conteúdo em áudio", descricao: "Dicas, correções e novidades no ritmo do estudante.", icone: Radio },
+  { titulo: "Pagamentos e split nativos", descricao: "PIX, boleto e cartão parcelado, com repasse automático ao criador.", icone: CreditCard },
+  { titulo: "Ao vivo e sob demanda", descricao: "Videochamada, streaming, agenda de mentoria e aulas gravadas integrados.", icone: Video },
+  { titulo: "Leitura automática de documentos", descricao: "Do gabarito fotografado ao espelho oficial da FGV, lidos e interpretados.", icone: ScanLine },
+  { titulo: "Portais para parceiros", descricao: "Instituições operam com marca, turmas, professores e relatórios próprios.", icone: Building2 },
 ];
 
 const VALORES: { titulo: string; descricao: string; icone: LucideIcon }[] = [
