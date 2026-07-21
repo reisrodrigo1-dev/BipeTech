@@ -34,6 +34,7 @@ import { HeroPanel, SplitFlow } from "@/components/site/Artifacts";
 import { PapDemo } from "@/components/site/PapDemo";
 import { OcrDemo } from "@/components/site/OcrDemo";
 import { CorrectionEngine } from "@/components/site/CorrectionEngine";
+import { Logo } from "@/components/site/Logo";
 
 /* ------------------------------------------------------------------ */
 /* Hooks                                                               */
@@ -225,10 +226,7 @@ export default function Home() {
           }`}
         >
           <a href="#top" className="flex flex-shrink-0 items-center gap-2.5 rounded-full focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring">
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-surface ring-1 ring-border">
-              <img src="/logo_BIPETech.png" alt="BIPETech" className="h-5 w-5 object-contain" />
-            </span>
-            <span className="font-heading text-base font-bold tracking-tight">BIPETech</span>
+            <Logo className="h-7" />
           </a>
 
           <div className="hidden items-center gap-7 md:flex">
@@ -586,10 +584,7 @@ export default function Home() {
           <div className="grid gap-10 md:grid-cols-4">
             <div className="md:col-span-2">
               <div className="flex items-center gap-2.5">
-                <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-background ring-1 ring-border">
-                  <img src="/logo_BIPETech.png" alt="BIPETech" className="h-6 w-6 object-contain" />
-                </span>
-                <span className="font-heading text-lg font-bold tracking-tight">BIPETech</span>
+                <Logo className="h-9" />
               </div>
               <p className="mt-4 max-w-sm leading-relaxed text-muted-foreground">
                 Tecnologia educacional brasileira. Construímos e operamos nossos próprios produtos.

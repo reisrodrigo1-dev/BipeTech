@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Link } from "wouter";
 import { ArrowLeft, CreditCard, Calculator, Building2, Lock, Gauge, ShieldCheck, type LucideIcon } from "lucide-react";
+import { Logo } from "@/components/site/Logo";
 
 /* ==================================================================
    /engenharia — aprofundamento para quem quer cavar.
@@ -72,7 +73,7 @@ export default function Engenharia() {
             <ArrowLeft className="h-4 w-4" />
             Voltar
           </Link>
-          <span className="font-heading text-sm font-bold tracking-tight">BIPETech</span>
+          <Logo className="h-6" />
         </nav>
       </header>
 
