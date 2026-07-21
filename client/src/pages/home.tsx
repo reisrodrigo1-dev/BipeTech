@@ -29,7 +29,10 @@ import {
   Mail,
   type LucideIcon,
 } from "lucide-react";
+import { Link } from "wouter";
 import { HeroPanel, SplitFlow } from "@/components/site/Artifacts";
+import { PapDemo } from "@/components/site/PapDemo";
+import { OcrDemo } from "@/components/site/OcrDemo";
 import { CorrectionEngine } from "@/components/site/CorrectionEngine";
 
 /* ------------------------------------------------------------------ */
@@ -200,6 +203,11 @@ export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const { theme, toggle } = useTheme();
   useReveal();
+
+  useEffect(() => {
+    // Restaura o título ao voltar de /engenharia (navegação client-side).
+    document.title = "BIPETech | Infraestrutura de tecnologia e IA para educação";
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 80);
@@ -405,6 +413,9 @@ export default function Home() {
                       })}
                     </div>
                   </div>
+
+                  {/* Demo do produto: mostra, em vez de descrever */}
+                  <div className="mt-8">{idx === 0 ? <PapDemo /> : <OcrDemo />}</div>
                 </div>
               );
             })}
@@ -422,6 +433,15 @@ export default function Home() {
           />
           <div className="reveal mt-14">
             <CorrectionEngine />
+          </div>
+          <div className="reveal mt-10 text-center">
+            <Link
+              href="/engenharia"
+              className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-2.5 text-sm font-semibold transition-colors hover:bg-secondary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+            >
+              Ver as decisões de arquitetura
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
         </div>
       </section>

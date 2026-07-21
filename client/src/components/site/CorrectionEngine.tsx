@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { FileText, ListChecks, ScanSearch, Calculator, Check, Minus, X } from "lucide-react";
+import { useInViewOnce, prefersReducedMotion } from "@/hooks/use-in-view";
 
 /* ==================================================================
    CorrectionEngine — a seção-âncora de credibilidade.
@@ -34,50 +35,19 @@ const ESTILO: Record<Estado, { cls: string; Icon: typeof Check; label: string }>
 };
 
 export function CorrectionEngine() {
+  const { ref, inView } = useInViewOnce<HTMLDivElement>();
   const [revelados, setRevelados] = useState(0);
-  const ref = useRef<HTMLDivElement>(null);
-  const started = useRef(false);
 
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    const run = () => {
-      if (started.current) return;
-      started.current = true;
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        setRevelados(ITENS.length);
-        return;
-      }
-      let i = 0;
-      const tick = window.setInterval(() => {
-        i += 1;
-        setRevelados(i);
-        if (i >= ITENS.length) window.clearInterval(tick);
-      }, 420);
-    };
-
-    if (!("IntersectionObserver" in window)) {
-      run();
+    if (!inView) return;
+    if (prefersReducedMotion()) {
+      setRevelados(ITENS.length);
       return;
     }
-    const io = new IntersectionObserver(
-      (entries) => entries.forEach((e) => e.isIntersecting && run()),
-      { threshold: 0.15, rootMargin: "0px 0px -10% 0px" }
-    );
-    io.observe(el);
-
-    // Rede de segurança: se o widget já estiver visível, começa agora; e
-    // mesmo que o observer nunca dispare, os itens não podem ficar
-    // invisíveis para sempre.
-    if (el.getBoundingClientRect().top < window.innerHeight) run();
-    const fallback = window.setTimeout(run, 2500);
-
-    return () => {
-      io.disconnect();
-      window.clearTimeout(fallback);
-    };
-  }, []);
+    if (revelados >= ITENS.length) return;
+    const t = window.setTimeout(() => setRevelados((n) => n + 1), 420);
+    return () => window.clearTimeout(t);
+  }, [inView, revelados]);
 
   return (
     <div ref={ref}>
