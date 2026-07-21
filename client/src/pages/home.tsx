@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import {
   Menu,
   X,
@@ -7,28 +7,30 @@ import {
   ArrowRight,
   ArrowUpRight,
   Check,
-  Building2,
-  GraduationCap,
-  BrainCircuit,
   Store,
   Scale,
   Sparkles,
-  Video,
   ScanLine,
+  Calculator,
   CreditCard,
-  Target,
-  Eye,
-  Cpu,
+  Video,
+  Building2,
+  BrainCircuit,
   ShieldCheck,
-  Users,
-  TrendingUp,
-  Zap,
-  HeartHandshake,
+  Globe,
+  Layers,
+  Target,
+  Repeat,
+  Lock,
+  GraduationCap,
+  Briefcase,
   Linkedin,
   Instagram,
   Mail,
   type LucideIcon,
 } from "lucide-react";
+import { HeroPanel, SplitFlow } from "@/components/site/Artifacts";
+import { CorrectionEngine } from "@/components/site/CorrectionEngine";
 
 /* ------------------------------------------------------------------ */
 /* Hooks                                                               */
@@ -40,8 +42,7 @@ function useTheme() {
   useEffect(() => {
     const stored = localStorage.getItem("bipetech-theme");
     const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const initial = (stored as "light" | "dark") || (prefersDark ? "dark" : "light");
-    setTheme(initial);
+    setTheme((stored as "light" | "dark") || (prefersDark ? "dark" : "light"));
   }, []);
 
   useEffect(() => {
@@ -73,20 +74,14 @@ function useReveal() {
     );
     els.forEach((el) => io.observe(el));
 
-    // Safety net: immediately reveal anything already in the viewport (above the
-    // fold), and guarantee everything is shown shortly after load even if the
-    // observer never fires (e.g. unusual viewport / no-scroll environments).
-    const revealInView = () => {
+    // Safety net: reveal what is already above the fold, and guarantee
+    // everything shows even if the observer never fires.
+    const revealInView = () =>
       els.forEach((el) => {
-        if (el.getBoundingClientRect().top < window.innerHeight) {
-          el.classList.add("is-visible");
-        }
+        if (el.getBoundingClientRect().top < window.innerHeight) el.classList.add("is-visible");
       });
-    };
     revealInView();
-    const fallback = window.setTimeout(() => {
-      els.forEach((el) => el.classList.add("is-visible"));
-    }, 1200);
+    const fallback = window.setTimeout(() => els.forEach((el) => el.classList.add("is-visible")), 1200);
 
     return () => {
       io.disconnect();
@@ -96,7 +91,7 @@ function useReveal() {
 }
 
 /* ------------------------------------------------------------------ */
-/* Small building blocks                                               */
+/* Building blocks                                                     */
 /* ------------------------------------------------------------------ */
 
 function Eyebrow({ children }: { children: React.ReactNode }) {
@@ -107,15 +102,21 @@ function Eyebrow({ children }: { children: React.ReactNode }) {
   );
 }
 
-function NavLink({ label, href, onClick }: { label: string; href: string; onClick?: () => void }) {
+function SectionHead({
+  eyebrow,
+  titulo,
+  sub,
+}: {
+  eyebrow: string;
+  titulo: string;
+  sub?: string;
+}) {
   return (
-    <a
-      href={href}
-      onClick={onClick}
-      className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring rounded-sm"
-    >
-      {label}
-    </a>
+    <div className="reveal mx-auto max-w-3xl text-center">
+      <Eyebrow>{eyebrow}</Eyebrow>
+      <h2 className="display-tight mt-3 text-[clamp(1.875rem,4vw,2.75rem)]">{titulo}</h2>
+      {sub && <p className="mt-5 text-lg leading-relaxed text-muted-foreground">{sub}</p>}
+    </div>
   );
 }
 
@@ -124,90 +125,70 @@ function NavLink({ label, href, onClick }: { label: string; href: string; onClic
 /* ------------------------------------------------------------------ */
 
 const NAV_LINKS = [
-  { label: "Sobre", href: "#sobre" },
   { label: "Produtos", href: "#produtos" },
-  { label: "Princípios", href: "#principios" },
+  { label: "Engenharia", href: "#engenharia" },
+  { label: "Playbook", href: "#playbook" },
   { label: "Contato", href: "#contato" },
-];
-
-const PILARES: { titulo: string; descricao: string; icone: LucideIcon }[] = [
-  {
-    titulo: "Infraestrutura para quem ensina",
-    descricao:
-      "Ferramentas para educadores e criadores produzirem, venderem e monetizarem conhecimento, com tecnologia integrada em um só lugar.",
-    icone: Building2,
-  },
-  {
-    titulo: "Jornada para quem aprende",
-    descricao:
-      "Experiências de estudo com método, ritmo e apoio, desenhadas a partir da realidade de cada aluno até o objetivo final.",
-    icone: GraduationCap,
-  },
-  {
-    titulo: "Inteligência que organiza",
-    descricao:
-      "IA como camada que organiza estudos, personaliza jornadas e aproxima o aprendizado do resultado real de cada pessoa.",
-    icone: BrainCircuit,
-  },
 ];
 
 const PRODUTOS = [
   {
     nome: "ConectaEduca",
+    url: "https://conectaeduca.com.br",
     tagline: "A plataforma completa de educação digital",
-    descricao:
-      "Marketplace de dois lados: criadores publicam cursos, mentorias, eventos e ebooks com página de vendas, captura de leads e checkout próprios. Alunos compram, assistem e acompanham tudo em um único portal.",
-    bullets: [
-      "Cursos, mentorias, eventos e ebooks em uma só plataforma",
-      "PAP: assistente de IA que estrutura o curso e gera a página de vendas",
-      "Checkout próprio com PIX, boleto e cartão parcelado",
-      "Split automático: o criador recebe direto na sua conta",
-      "Mentoria com agenda e videochamada, aulas ao vivo e certificados verificáveis",
+    resumo:
+      "Marketplace de dois lados: criadores publicam cursos, mentorias com agenda, eventos e ebooks. Alunos compram e consomem tudo em um portal único.",
+    capacidades: [
+      { titulo: "PAP, o assistente que produz", desc: "A IA conversa, estrutura o curso e gera a página de vendas — com tool-use, entrega o artefato em vez de sugerir texto.", icon: Sparkles },
+      { titulo: "Sales Studio e Capture Studio", desc: "Páginas de vendas e de captura construídas dentro da plataforma, com domínio próprio.", icon: Globe },
+      { titulo: "Checkout com split nativo", desc: "PIX, boleto e cartão parcelado. O criador recebe direto na conta dele.", icon: CreditCard },
+      { titulo: "Entrega completa", desc: "Mentoria por vídeo, transmissão ao vivo, certificados verificáveis e fórum por aula.", icon: Video },
     ],
-    ctaLabel: "Acessar ConectaEduca",
-    ctaUrl: "https://conectaeduca.com.br",
     icone: Store,
     accentClass: "accent-conecta",
   },
   {
     nome: "TreinadorOAB",
+    url: "https://treinadoroab.com.br",
     tagline: "Preparação para o Exame da OAB, nas duas fases",
-    descricao:
-      "Treino e correção para a 1ª e a 2ª fase. A IA avalia peças e questões discursivas item a item contra a rubrica oficial, e o módulo de recurso lê o espelho da FGV para calcular sua margem recursal.",
-    bullets: [
-      "Correção da 2ª fase por IA, com nota por item e feedback estruturado",
-      "Análise de recurso: leitura do espelho oficial e cálculo da margem recursal",
-      "Banco de questões, simulados e treino livre gamificado da 1ª fase",
-      "Leitura automática do gabarito a partir da foto da folha de respostas",
-      "Clara, assistente de IA, e portais próprios para instituições parceiras",
+    resumo:
+      "Treino e correção para a 1ª e a 2ª fase. O módulo de recurso é o coração do produto: transforma um palpite em cálculo reproduzível.",
+    capacidades: [
+      { titulo: "Análise de recurso", desc: "Lê o espelho oficial da FGV, calcula a margem recursal de forma determinística e apoia a redação do recurso.", icon: Scale },
+      { titulo: "Correção da 2ª fase item a item", desc: "Peças e questões discursivas avaliadas contra a rubrica oficial, com justificativa por item.", icon: BrainCircuit },
+      { titulo: "OCR da folha de respostas", desc: "As 80 respostas extraídas de uma foto por visão computacional. A imagem é descartada após o processamento.", icon: ScanLine },
+      { titulo: "Portais white-label", desc: "Instituições parceiras operam com slug próprio, turmas, professores e relatórios.", icon: Building2 },
     ],
-    ctaLabel: "Acessar TreinadorOAB",
-    ctaUrl: "https://treinadoroab.com.br",
     icone: Scale,
     accentClass: "accent-oab",
   },
 ];
 
-const DIFERENCIAIS: { titulo: string; descricao: string; icone: LucideIcon; large?: boolean }[] = [
-  {
-    titulo: "IA que faz o trabalho, não enfeite",
-    descricao:
-      "A mesma tecnologia que corrige uma peça da 2ª fase item a item contra a rubrica oficial também estrutura um curso inteiro conversando com o criador e gera a página de vendas. IA como parte do produto, não como vitrine.",
-    icone: Sparkles,
-    large: true,
-  },
-  { titulo: "Pagamentos e split nativos", descricao: "PIX, boleto e cartão parcelado, com repasse automático ao criador.", icone: CreditCard },
-  { titulo: "Ao vivo e sob demanda", descricao: "Videochamada, streaming, agenda de mentoria e aulas gravadas integrados.", icone: Video },
-  { titulo: "Leitura automática de documentos", descricao: "Do gabarito fotografado ao espelho oficial da FGV, lidos e interpretados.", icone: ScanLine },
-  { titulo: "Portais para parceiros", descricao: "Instituições operam com marca, turmas, professores e relatórios próprios.", icone: Building2 },
+const CAMADAS: { titulo: string; itens: string; icon: LucideIcon }[] = [
+  { titulo: "Inteligência", itens: "IA aplicada — tool-use, visão computacional e avaliação contra rubrica", icon: BrainCircuit },
+  { titulo: "Dados e identidade", itens: "Papéis e permissões, isolamento por tenant, impersonação administrativa auditada", icon: Lock },
+  { titulo: "Monetização", itens: "Checkout, split no ato da compra, assinaturas, pacotes e cotas por feature", icon: CreditCard },
+  { titulo: "Entrega e mídia", itens: "Portal do aluno, videochamada, transmissão ao vivo e white-label por slug", icon: Video },
 ];
 
-const VALORES: { titulo: string; descricao: string; icone: LucideIcon }[] = [
-  { titulo: "Educação que gera resultado", descricao: "Medimos sucesso pela transformação real do aluno e do educador, não por vaidade de plataforma.", icone: Target },
-  { titulo: "Tecnologia com propósito", descricao: "IA e produto são meios, não vitrine. Só construímos o que torna o aprender mais simples e humano.", icone: Cpu },
-  { titulo: "Honestidade no que prometemos", descricao: "Comunicamos com clareza, sem inflar números ou expectativas. Confiança vem da transparência.", icone: ShieldCheck },
-  { titulo: "Foco em quem usa", descricao: "Conhecemos a fundo cada público e desenhamos cada produto a partir da sua realidade.", icone: Users },
-  { titulo: "Constância e excelência", descricao: "Grandes conquistas vêm da disciplina diária — no aluno e na forma como evoluímos.", icone: TrendingUp },
+const PLAYBOOK = [
+  { n: "01", titulo: "Base horizontal", desc: "A plataforma de criação, venda e entrega existe e roda em produção.", icon: Layers },
+  { n: "02", titulo: "Escolha do nicho", desc: "Um domínio de altíssima exigência, com critério objetivo de acerto e uma dor cara.", icon: Target },
+  { n: "03", titulo: "Verticalização", desc: "A IA deixa de ser genérica e passa a operar contra a rubrica oficial daquele domínio.", icon: BrainCircuit },
+  { n: "04", titulo: "Repetição", desc: "A mesma anatomia se aplica a outros domínios com correção regrada.", icon: Repeat },
+];
+
+const PRINCIPIOS: { titulo: string; desc: string; icon: LucideIcon }[] = [
+  { titulo: "Determinismo onde importa", desc: "A IA gera linguagem e julgamento. Regra de negócio e número ficam no código.", icon: Calculator },
+  { titulo: "O dado do aluno não vira estoque", desc: "A imagem da folha de respostas é processada e descartada. Dado de aluno não treina modelo.", icon: ShieldCheck },
+  { titulo: "Honestidade de métrica", desc: "Não publicamos número que o visitante não possa verificar. Por isso não há contador nesta página.", icon: Check },
+];
+
+const PORTAS = [
+  { label: "Sou criador de conteúdo", desc: "Publicar e vender na ConectaEduca", href: "https://conectaeduca.com.br", externo: true, icon: Store },
+  { label: "Estudo para a OAB", desc: "Treinar e corrigir no TreinadorOAB", href: "https://treinadoroab.com.br", externo: true, icon: GraduationCap },
+  { label: "Represento uma instituição", desc: "Portal white-label para sua marca", href: "#contato", externo: false, icon: Building2 },
+  { label: "Quero conversar sobre a BIPETech", desc: "Contato institucional", href: "#contato", externo: false, icon: Briefcase },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -221,208 +202,209 @@ export default function Home() {
   useReveal();
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    const onScroll = () => setScrolled(window.scrollY > 80);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
     <div className="min-h-dvh bg-background text-foreground">
-      {/* ===================== Header ===================== */}
-      <header
-        className={`fixed inset-x-0 top-0 z-50 transition-colors duration-200 ${
-          scrolled ? "border-b border-border bg-background/85 backdrop-blur-md" : "border-b border-transparent"
-        }`}
-      >
-        <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-6">
-          <a href="#top" className="flex items-center gap-2.5 rounded-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring">
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-surface ring-1 ring-border">
-              <img src="/logo_BIPETech.png" alt="BIPETech" className="h-6 w-6 object-contain" />
+      {/* ===================== Header (pílula flutuante) ===================== */}
+      <header className="sticky top-3 z-50 flex justify-center px-4 pt-3 sm:top-5">
+        <nav
+          className={`flex w-full max-w-5xl items-center justify-between gap-4 rounded-full px-4 py-2.5 transition-all duration-300 sm:px-5 ${
+            scrolled ? "border border-border bg-background/85 shadow-sm backdrop-blur-md" : "border border-transparent"
+          }`}
+        >
+          <a href="#top" className="flex flex-shrink-0 items-center gap-2.5 rounded-full focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-surface ring-1 ring-border">
+              <img src="/logo_BIPETech.png" alt="BIPETech" className="h-5 w-5 object-contain" />
             </span>
-            <span className="font-heading text-lg font-bold tracking-tight">BIPETech</span>
+            <span className="font-heading text-base font-bold tracking-tight">BIPETech</span>
           </a>
 
-          <div className="hidden items-center gap-8 md:flex">
+          <div className="hidden items-center gap-7 md:flex">
             {NAV_LINKS.map((l) => (
-              <NavLink key={l.href} {...l} />
+              <a key={l.href} href={l.href} className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+                {l.label}
+              </a>
             ))}
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-shrink-0 items-center gap-1.5">
             <button
               onClick={toggle}
               aria-label={theme === "dark" ? "Ativar tema claro" : "Ativar tema escuro"}
-              className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+              className="flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
             >
               {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </button>
             <a
-              href="#produtos"
-              className="hidden rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-transform hover:bg-primary-hover active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:inline-block"
+              href="#contato"
+              className="hidden rounded-full bg-accent px-4 py-2 text-sm font-semibold text-accent-foreground transition-transform hover:opacity-95 active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:inline-block"
             >
-              Conhecer o ecossistema
+              Falar com a BIPETech
             </a>
             <button
               onClick={() => setMenuOpen((o) => !o)}
               aria-label={menuOpen ? "Fechar menu" : "Abrir menu"}
               aria-expanded={menuOpen}
-              className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground hover:bg-secondary md:hidden"
+              className="flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground hover:bg-secondary md:hidden"
             >
               {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
           </div>
         </nav>
-
-        {menuOpen && (
-          <div className="border-t border-border bg-background px-5 py-4 md:hidden">
-            <div className="flex flex-col gap-4">
-              {NAV_LINKS.map((l) => (
-                <NavLink key={l.href} {...l} onClick={() => setMenuOpen(false)} />
-              ))}
-            </div>
-          </div>
-        )}
       </header>
 
-      {/* ===================== Hero ===================== */}
-      <section id="top" className="hero-mesh relative overflow-hidden pb-20 pt-32 sm:pb-28 sm:pt-40">
-        <div className="mx-auto max-w-3xl px-5 text-center sm:px-6">
-          <div className="reveal">
-            <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-3.5 py-1.5 text-[0.8125rem] font-medium text-muted-foreground">
-              <Sparkles className="h-3.5 w-3.5 text-accent" />
-              Tecnologia e IA aplicadas à educação
-            </span>
-          </div>
-
-          <h1 className="reveal mt-7 font-heading text-[clamp(2.5rem,6vw,4rem)] font-bold leading-[1.05]">
-            Transformamos conhecimento em{" "}
-            <span className="text-primary">conquista</span>
-          </h1>
-
-          <p className="reveal mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-            A BIPETech é o ecossistema brasileiro que conecta quem ensina a quem aprende.
-            Plataformas digitais que levam cada pessoa, de forma concreta, do conhecimento ao resultado.
-          </p>
-
-          <div className="reveal mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <a
-              href="#produtos"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-base font-semibold text-primary-foreground transition-transform hover:bg-primary-hover active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:w-auto"
-            >
-              Conhecer nossos produtos
-              <ArrowRight className="h-4 w-4" />
-            </a>
-            <a
-              href="#sobre"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-surface px-6 py-3 text-base font-semibold text-foreground transition-colors hover:bg-secondary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:w-auto"
-            >
-              Sobre a BIPETech
+      {menuOpen && (
+        <div className="fixed inset-x-4 top-20 z-40 rounded-3xl border border-border bg-background p-5 shadow-lg md:hidden">
+          <div className="flex flex-col gap-4">
+            {NAV_LINKS.map((l) => (
+              <a key={l.href} href={l.href} onClick={() => setMenuOpen(false)} className="text-base font-medium text-muted-foreground">
+                {l.label}
+              </a>
+            ))}
+            <a href="#contato" onClick={() => setMenuOpen(false)} className="mt-2 rounded-full bg-accent px-4 py-2.5 text-center text-sm font-semibold text-accent-foreground">
+              Falar com a BIPETech
             </a>
           </div>
         </div>
+      )}
 
-        {/* Honest qualitative proof strip */}
-        <div className="reveal mx-auto mt-16 grid max-w-3xl grid-cols-1 gap-3 px-5 sm:grid-cols-3 sm:px-6">
-          {[
-            { icon: ShieldCheck, label: "Plataformas em produção" },
-            { icon: Zap, label: "IA aplicada, não vitrine" },
-            { icon: HeartHandshake, label: "Suporte humano" },
-          ].map(({ icon: Icon, label }) => (
-            <div key={label} className="flex items-center justify-center gap-2.5 rounded-xl border border-border bg-surface px-4 py-3 text-sm font-medium text-muted-foreground">
-              <Icon className="h-4 w-4 text-primary" />
-              {label}
+      {/* ===================== Hero ===================== */}
+      <section id="top" className="px-4 pb-16 pt-6 sm:pb-24 sm:pt-8">
+        <div className="panel-deep relative mx-auto max-w-6xl overflow-hidden rounded-[28px] px-6 py-16 sm:rounded-[40px] sm:px-12 sm:py-24">
+          <div className="dot-mesh pointer-events-none absolute inset-0 opacity-60" aria-hidden />
+          <div className="relative grid items-center gap-12 lg:grid-cols-[5fr_6fr]">
+            <div>
+              <span className="reveal inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-3.5 py-1.5 text-[0.8125rem] font-medium text-white/75">
+                <span className="breathe h-1.5 w-1.5 rounded-full bg-[hsl(43_96%_58%)]" />
+                Duas plataformas em produção
+              </span>
+
+              <h1 className="reveal display-tight mt-6 text-[clamp(2.25rem,5vw,3.75rem)] text-white">
+                Construímos a infraestrutura que faz educação funcionar no digital.
+              </h1>
+
+              <p className="reveal mt-6 max-w-[52ch] text-lg leading-relaxed text-white/70">
+                Dois produtos no ar — um marketplace de infoprodutos e um preparatório para a OAB —
+                sobre a mesma base de IA aplicada, checkout com split e portais white-label.
+              </p>
+
+              <div className="reveal mt-9 flex flex-col gap-3 sm:flex-row">
+                <a
+                  href="#produtos"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-accent px-6 py-3 text-base font-semibold text-accent-foreground transition-transform hover:opacity-95 active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                >
+                  Conhecer os produtos
+                  <ArrowRight className="h-4 w-4" />
+                </a>
+                <a
+                  href="#engenharia"
+                  className="inline-flex items-center justify-center gap-2 rounded-full border border-white/25 px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                >
+                  Ver a arquitetura
+                </a>
+              </div>
             </div>
-          ))}
+
+            <div className="reveal">
+              <HeroPanel />
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* ===================== Sobre ===================== */}
-      <section id="sobre" className="border-t border-border py-20 sm:py-28">
-        <div className="mx-auto max-w-6xl px-5 sm:px-6">
-          <div className="reveal mx-auto max-w-3xl text-center">
-            <Eyebrow>Quem somos</Eyebrow>
-            <h2 className="mt-3 font-heading text-[clamp(1.875rem,4vw,2.75rem)] font-bold">
-              Mais que software. Um ecossistema de educação.
-            </h2>
-            <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
-              A BIPETech atua como holding e guarda-chuva de plataformas voltadas ao ensino, à aprendizagem
-              e à transformação de carreiras. De um lado, infraestrutura para quem cria e distribui educação.
-              Do outro, experiências de estudo que sustentam o aluno até o resultado.
+      {/* ===================== Faixa de realidade ===================== */}
+      <section className="border-y border-border bg-surface">
+        <div className="mx-auto grid max-w-6xl gap-6 px-5 py-10 sm:px-6 md:grid-cols-3 md:gap-0 md:divide-x md:divide-border">
+          <div className="reveal md:pr-8">
+            <div className="flex items-center gap-2 font-heading text-sm font-semibold">
+              <Globe className="h-4 w-4 text-primary" />
+              Dois produtos no ar
+            </div>
+            <p className="mt-2 text-sm text-muted-foreground">
+              <a href="https://conectaeduca.com.br" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4 hover:text-foreground">conectaeduca.com.br</a>
+              {" e "}
+              <a href="https://treinadoroab.com.br" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4 hover:text-foreground">treinadoroab.com.br</a>
+              {" — confira você mesmo."}
             </p>
           </div>
-
-          <div className="mt-14 grid gap-6 md:grid-cols-3">
-            {PILARES.map(({ titulo, descricao, icone: Icon }) => (
-              <div
-                key={titulo}
-                className="reveal rounded-2xl border border-border bg-card p-7 transition-transform duration-200 hover:-translate-y-1"
-              >
-                <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                  <Icon className="h-6 w-6" />
-                </span>
-                <h3 className="mt-5 font-heading text-xl font-semibold">{titulo}</h3>
-                <p className="mt-3 leading-relaxed text-muted-foreground">{descricao}</p>
-              </div>
-            ))}
+          <div className="reveal md:px-8">
+            <div className="flex items-center gap-2 font-heading text-sm font-semibold">
+              <BrainCircuit className="h-4 w-4 text-primary" />
+              IA em fluxo real de usuário
+            </div>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Tool-use e visão computacional dentro do produto, não chat decorativo.
+            </p>
+          </div>
+          <div className="reveal md:pl-8">
+            <div className="flex items-center gap-2 font-heading text-sm font-semibold">
+              <CreditCard className="h-4 w-4 text-primary" />
+              Pagamentos com split nativo
+            </div>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Mercado Pago Connect: o criador recebe direto, sem esperar repasse.
+            </p>
           </div>
         </div>
       </section>
 
       {/* ===================== Produtos ===================== */}
-      <section id="produtos" className="border-t border-border bg-surface py-20 sm:py-28">
+      <section id="produtos" className="py-20 sm:py-28">
         <div className="mx-auto max-w-6xl px-5 sm:px-6">
-          <div className="reveal mx-auto max-w-3xl text-center">
-            <Eyebrow>Nossos produtos</Eyebrow>
-            <h2 className="mt-3 font-heading text-[clamp(1.875rem,4vw,2.75rem)] font-bold">
-              Dois produtos, uma mesma tese
-            </h2>
-            <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
-              Plataforma que habilita a educação em escala e produto verticalizado que prova, em um nicho de
-              alta exigência, como tecnologia bem aplicada leva o aluno até o resultado.
-            </p>
-          </div>
+          <SectionHead
+            eyebrow="O que roda hoje"
+            titulo="Dois produtos, uma engenharia"
+            sub="Um horizontal, que habilita qualquer criador. Um vertical, que prova a tese num nicho de altíssima exigência."
+          />
 
-          <div className="mt-14 grid gap-6 lg:grid-cols-2">
-            {PRODUTOS.map((p) => {
+          <div className="mt-16 space-y-16">
+            {PRODUTOS.map((p, idx) => {
               const Icon = p.icone;
               return (
-                <div
-                  key={p.nome}
-                  className={`${p.accentClass} reveal group flex flex-col rounded-2xl border border-border bg-card p-8 transition-transform duration-200 hover:-translate-y-1`}
-                  style={{ borderTop: "3px solid hsl(var(--pa))" }}
-                >
-                  <div className="flex items-center gap-4">
-                    <span className="flex h-14 w-14 items-center justify-center rounded-xl bg-accent-product-soft text-accent-product">
-                      <Icon className="h-7 w-7" />
-                    </span>
-                    <div>
-                      <h3 className="font-heading text-2xl font-bold">{p.nome}</h3>
-                      <p className="text-sm font-medium text-accent-product">{p.tagline}</p>
+                <div key={p.nome} className={`${p.accentClass} reveal`}>
+                  <div className="grid gap-8 lg:grid-cols-[5fr_7fr] lg:items-start">
+                    <div className={idx % 2 === 1 ? "lg:order-2" : ""}>
+                      <div className="flex items-center gap-3">
+                        <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-accent-product-soft text-accent-product">
+                          <Icon className="h-6 w-6" />
+                        </span>
+                        <div>
+                          <h3 className="font-heading text-2xl font-bold">{p.nome}</h3>
+                          <p className="text-sm font-medium text-accent-product">{p.tagline}</p>
+                        </div>
+                      </div>
+                      <p className="mt-5 leading-relaxed text-muted-foreground">{p.resumo}</p>
+                      <a
+                        href={p.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-6 inline-flex items-center gap-2 rounded-full bg-accent-product px-5 py-2.5 text-sm font-semibold text-[hsl(var(--pa-fg))] transition-transform hover:opacity-95 active:scale-[0.98]"
+                      >
+                        Visitar plataforma
+                        <ArrowUpRight className="h-4 w-4" />
+                      </a>
+                    </div>
+
+                    <div className={`grid gap-3 sm:grid-cols-2 ${idx % 2 === 1 ? "lg:order-1" : ""}`}>
+                      {p.capacidades.map((c) => {
+                        const CIcon = c.icon;
+                        return (
+                          <div
+                            key={c.titulo}
+                            className="rounded-2xl border border-border bg-card p-5 transition-transform duration-200 hover:-translate-y-1"
+                          >
+                            <CIcon className="h-5 w-5 text-accent-product" />
+                            <div className="mt-3 font-heading text-[0.95rem] font-semibold leading-snug">{c.titulo}</div>
+                            <p className="mt-2 text-[0.8rem] leading-relaxed text-muted-foreground">{c.desc}</p>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
-
-                  <p className="mt-6 leading-relaxed text-muted-foreground">{p.descricao}</p>
-
-                  <ul className="mt-6 space-y-3">
-                    {p.bullets.map((b) => (
-                      <li key={b} className="flex items-start gap-3">
-                        <span className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-accent-product-soft">
-                          <Check className="h-3 w-3 text-accent-product" />
-                        </span>
-                        <span className="text-[0.95rem] text-foreground/90">{b}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <a
-                    href={p.ctaUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-8 inline-flex items-center justify-center gap-2 rounded-lg bg-accent-product px-6 py-3 text-base font-semibold text-[hsl(var(--pa-fg))] transition-transform hover:opacity-95 active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
-                  >
-                    {p.ctaLabel}
-                    <ArrowUpRight className="h-4 w-4" />
-                  </a>
                 </div>
               );
             })}
@@ -430,132 +412,150 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===================== Diferenciais (bento) ===================== */}
-      <section className="border-t border-border py-20 sm:py-28">
+      {/* ===================== Engine de correção ===================== */}
+      <section id="engenharia" className="border-t border-border bg-surface py-20 sm:py-28">
         <div className="mx-auto max-w-6xl px-5 sm:px-6">
-          <div className="reveal mx-auto max-w-3xl text-center">
-            <Eyebrow>Por que BIPETech</Eyebrow>
-            <h2 className="mt-3 font-heading text-[clamp(1.875rem,4vw,2.75rem)] font-bold">
-              Tecnologia que serve ao aprendizado
-            </h2>
+          <SectionHead
+            eyebrow="Por dentro"
+            titulo="A engine de correção, aberta"
+            sub="A diferença entre “IA que dá nota” e “IA contida por regra”. É aqui que mora o fosso — e é por isso que a nota é justa e contestável."
+          />
+          <div className="reveal mt-14">
+            <CorrectionEngine />
           </div>
+        </div>
+      </section>
 
-          <div className="mt-14 grid gap-5 md:grid-cols-3 md:auto-rows-fr">
-            {DIFERENCIAIS.map(({ titulo, descricao, icone: Icon, large }) => (
+      {/* ===================== Split ===================== */}
+      <section className="py-20 sm:py-28">
+        <div className="mx-auto max-w-4xl px-5 sm:px-6">
+          <SectionHead
+            eyebrow="Modelo"
+            titulo="Como o dinheiro anda"
+            sub="Interessa igualmente a quem vende e a quem investe — sem um centavo de resultado na tela."
+          />
+          <div className="reveal mt-12">
+            <SplitFlow />
+          </div>
+        </div>
+      </section>
+
+      {/* ===================== Espinha dorsal ===================== */}
+      <section className="border-t border-border bg-surface py-20 sm:py-28">
+        <div className="mx-auto max-w-6xl px-5 sm:px-6">
+          <SectionHead
+            eyebrow="Plataforma"
+            titulo="Duas verticais, uma engenharia"
+            sub="Os dois produtos não são projetos paralelos. Compartilham a mesma espinha dorsal — e é ela que torna uma terceira vertical um projeto de meses, não de anos."
+          />
+          <div className="mt-14 grid gap-4 md:grid-cols-4">
+            {CAMADAS.map(({ titulo, itens, icon: Icon }, i) => (
               <div
                 key={titulo}
-                className={`reveal relative overflow-hidden rounded-2xl border border-border p-7 transition-transform duration-200 hover:-translate-y-1 ${
-                  large ? "bg-card md:col-span-2 md:row-span-2" : "bg-card"
-                }`}
+                className="reveal rounded-2xl border border-border bg-card p-6 transition-transform duration-200 hover:-translate-y-1"
+                style={{ transitionDelay: `${i * 60}ms` }}
               >
-                {large && (
-                  <div
-                    className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full"
-                    style={{ background: "radial-gradient(closest-side, hsl(var(--brand-accent) / 0.18), transparent)" }}
-                    aria-hidden
-                  />
-                )}
-                <span
-                  className={`flex items-center justify-center rounded-xl ${
-                    large ? "h-14 w-14 bg-accent/15 text-accent" : "h-12 w-12 bg-primary/10 text-primary"
-                  }`}
-                >
-                  <Icon className={large ? "h-7 w-7" : "h-6 w-6"} />
+                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  <Icon className="h-5 w-5" />
                 </span>
-                <h3 className={`mt-5 font-heading font-semibold ${large ? "text-2xl" : "text-lg"}`}>{titulo}</h3>
-                <p className="mt-3 leading-relaxed text-muted-foreground">{descricao}</p>
+                <h3 className="mt-4 font-heading text-base font-semibold">{titulo}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{itens}</p>
               </div>
             ))}
+          </div>
+          <div className="reveal mt-6 flex flex-wrap items-center justify-center gap-3 text-sm">
+            <span className="rounded-full bg-[hsl(var(--pa-conecta)/0.14)] px-3.5 py-1.5 font-semibold text-[hsl(var(--pa-conecta))]">ConectaEduca</span>
+            <span className="text-muted-foreground">e</span>
+            <span className="rounded-full bg-[hsl(var(--pa-oab)/0.14)] px-3.5 py-1.5 font-semibold text-[hsl(var(--pa-oab))]">TreinadorOAB</span>
+            <span className="text-muted-foreground">rodam sobre estas mesmas quatro camadas.</span>
           </div>
         </div>
       </section>
 
-      {/* ===================== Princípios ===================== */}
-      <section id="principios" className="border-t border-border bg-surface py-20 sm:py-28">
+      {/* ===================== Playbook ===================== */}
+      <section id="playbook" className="py-20 sm:py-28">
         <div className="mx-auto max-w-6xl px-5 sm:px-6">
-          <div className="reveal mx-auto max-w-3xl text-center">
-            <Eyebrow>Nossos princípios</Eyebrow>
-            <h2 className="mt-3 font-heading text-[clamp(1.875rem,4vw,2.75rem)] font-bold">
-              No que acreditamos
-            </h2>
-          </div>
-
-          <div className="mt-14 grid gap-6 lg:grid-cols-2">
-            <div className="reveal rounded-2xl border border-border bg-card p-8">
-              <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                <Target className="h-6 w-6" />
-              </span>
-              <h3 className="mt-5 font-heading text-xl font-semibold">Missão</h3>
-              <p className="mt-3 leading-relaxed text-muted-foreground">
-                Aplicar tecnologia e inteligência artificial à educação para conectar quem ensina a quem aprende
-                e levar cada pessoa, de forma concreta, do conhecimento ao resultado.
-              </p>
-            </div>
-            <div className="reveal rounded-2xl border border-border bg-card p-8">
-              <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent/15 text-accent">
-                <Eye className="h-6 w-6" />
-              </span>
-              <h3 className="mt-5 font-heading text-xl font-semibold">Visão</h3>
-              <p className="mt-3 leading-relaxed text-muted-foreground">
-                Ser o ecossistema brasileiro de referência em tecnologia educacional, reconhecido por transformar
-                aprendizado em conquistas reais — de carreiras construídas a aprovações conquistadas.
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            {VALORES.map(({ titulo, descricao, icone: Icon }) => (
-              <div key={titulo} className="reveal rounded-2xl border border-border bg-card p-6">
-                <Icon className="h-6 w-6 text-primary" />
-                <h4 className="mt-4 font-heading text-base font-semibold leading-snug">{titulo}</h4>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{descricao}</p>
+          <SectionHead
+            eyebrow="A tese"
+            titulo="De infraestrutura a nova vertical"
+            sub="O TreinadorOAB não é só o segundo produto. É a prova de que a base horizontal aguenta um domínio com critério objetivo de acerto."
+          />
+          <div className="mt-14 grid gap-4 md:grid-cols-4">
+            {PLAYBOOK.map(({ n, titulo, desc, icon: Icon }, i) => (
+              <div
+                key={n}
+                className="reveal relative rounded-2xl border border-border bg-card p-6"
+                style={{ transitionDelay: `${i * 70}ms` }}
+              >
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-xs font-semibold text-muted-foreground">{n}</span>
+                  <Icon className="h-5 w-5 text-primary" />
+                </div>
+                <h3 className="mt-4 font-heading text-base font-semibold">{titulo}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{desc}</p>
               </div>
             ))}
           </div>
+          <p className="reveal mt-8 text-center text-sm text-muted-foreground">
+            Tese declarada, não roadmap. Não nomeamos mercados nem prazos que ainda não existem.
+          </p>
         </div>
       </section>
 
-      {/* ===================== CTA ===================== */}
+      {/* ===================== Princípios de engenharia ===================== */}
+      <section className="border-t border-border bg-surface py-20 sm:py-28">
+        <div className="mx-auto max-w-6xl px-5 sm:px-6">
+          <SectionHead eyebrow="Como decidimos" titulo="Princípios de engenharia" />
+          <div className="mt-14 grid gap-5 md:grid-cols-3">
+            {PRINCIPIOS.map(({ titulo, desc, icon: Icon }, i) => (
+              <div
+                key={titulo}
+                className="reveal rounded-2xl border border-border bg-card p-7"
+                style={{ transitionDelay: `${i * 70}ms` }}
+              >
+                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent/15 text-accent">
+                  <Icon className="h-5 w-5" />
+                </span>
+                <h3 className="mt-4 font-heading text-base font-semibold">{titulo}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{desc}</p>
+              </div>
+            ))}
+          </div>
+          <p className="reveal mx-auto mt-10 max-w-2xl text-center leading-relaxed text-muted-foreground">
+            A BIPETech é uma empresa brasileira de tecnologia educacional que constrói e opera seus próprios
+            produtos. Também mantemos disciplina de custo: cotas mensais por feature e custo de IA monitorado
+            por plano e por aluno.
+          </p>
+        </div>
+      </section>
+
+      {/* ===================== Portas de entrada ===================== */}
       <section id="contato" className="py-20 sm:py-28">
         <div className="mx-auto max-w-6xl px-5 sm:px-6">
-          <div
-            className="reveal relative overflow-hidden rounded-3xl px-6 py-16 text-center sm:px-12"
-            style={{ background: "linear-gradient(135deg, hsl(198 80% 30%), hsl(198 84% 22%))" }}
-          >
-            <div
-              className="pointer-events-none absolute inset-0"
-              style={{ background: "radial-gradient(60% 80% at 80% 0%, hsl(var(--brand-accent) / 0.18), transparent 60%)" }}
-              aria-hidden
-            />
-            <div className="relative mx-auto max-w-2xl">
-              <h2 className="font-heading text-[clamp(1.75rem,4vw,2.5rem)] font-bold text-white">
-                Conhecimento vira conquista quando a tecnologia é bem aplicada
-              </h2>
-              <p className="mt-5 text-lg leading-relaxed text-white/85">
-                Seja para construir uma fonte de renda ensinando ou conquistar a aprovação que muda uma carreira,
-                há um produto BIPETech para o seu objetivo.
-              </p>
-              <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                <a
-                  href="https://conectaeduca.com.br"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-accent px-6 py-3 text-base font-semibold text-accent-foreground transition-transform hover:opacity-95 active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:w-auto"
-                >
-                  Acessar ConectaEduca
-                  <ArrowUpRight className="h-4 w-4" />
-                </a>
-                <a
-                  href="https://treinadoroab.com.br"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-white/40 px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-white/10 active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:w-auto"
-                >
-                  Acessar TreinadorOAB
-                  <ArrowUpRight className="h-4 w-4" />
-                </a>
-              </div>
-            </div>
+          <SectionHead eyebrow="Por onde começar" titulo="Qual é o seu caso?" />
+          <div className="mt-14 grid gap-4 sm:grid-cols-2">
+            {PORTAS.map(({ label, desc, href, externo, icon: Icon }, i) => (
+              <a
+                key={label}
+                href={href}
+                {...(externo ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                className="reveal group flex items-center gap-4 rounded-2xl border border-border bg-card p-6 transition-transform duration-200 hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                style={{ transitionDelay: `${i * 60}ms` }}
+              >
+                <span className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  <Icon className="h-5 w-5" />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block font-heading text-base font-semibold">{label}</span>
+                  <span className="block text-sm text-muted-foreground">{desc}</span>
+                </span>
+                {externo ? (
+                  <ArrowUpRight className="h-5 w-5 flex-shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
+                ) : (
+                  <ArrowRight className="h-5 w-5 flex-shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
+                )}
+              </a>
+            ))}
           </div>
         </div>
       </section>
@@ -572,7 +572,7 @@ export default function Home() {
                 <span className="font-heading text-lg font-bold tracking-tight">BIPETech</span>
               </div>
               <p className="mt-4 max-w-sm leading-relaxed text-muted-foreground">
-                O ecossistema de tecnologia e IA que transforma conhecimento em conquista.
+                Tecnologia educacional brasileira. Construímos e operamos nossos próprios produtos.
               </p>
               <div className="mt-6 flex gap-2">
                 {[
@@ -584,7 +584,7 @@ export default function Home() {
                     key={label}
                     href="#contato"
                     aria-label={label}
-                    className="flex h-10 w-10 items-center justify-center rounded-lg border border-border text-muted-foreground transition-colors hover:bg-primary hover:text-primary-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                    className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:bg-primary hover:text-primary-foreground"
                   >
                     <Icon className="h-5 w-5" />
                   </a>
@@ -595,30 +595,22 @@ export default function Home() {
             <div>
               <h4 className="font-heading text-sm font-semibold">Produtos</h4>
               <ul className="mt-4 space-y-3 text-sm">
-                <li>
-                  <a href="https://conectaeduca.com.br" target="_blank" rel="noopener noreferrer" className="text-muted-foreground transition-colors hover:text-foreground">
-                    ConectaEduca
-                  </a>
-                </li>
-                <li>
-                  <a href="https://treinadoroab.com.br" target="_blank" rel="noopener noreferrer" className="text-muted-foreground transition-colors hover:text-foreground">
-                    TreinadorOAB
-                  </a>
-                </li>
+                <li><a href="https://conectaeduca.com.br" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground">ConectaEduca</a></li>
+                <li><a href="https://treinadoroab.com.br" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground">TreinadorOAB</a></li>
               </ul>
             </div>
 
             <div>
               <h4 className="font-heading text-sm font-semibold">Empresa</h4>
               <ul className="mt-4 space-y-3 text-sm">
-                <li><a href="#sobre" className="text-muted-foreground transition-colors hover:text-foreground">Sobre</a></li>
-                <li><a href="#principios" className="text-muted-foreground transition-colors hover:text-foreground">Missão e valores</a></li>
-                <li><a href="#contato" className="text-muted-foreground transition-colors hover:text-foreground">Contato</a></li>
+                <li><a href="#engenharia" className="text-muted-foreground hover:text-foreground">Engenharia</a></li>
+                <li><a href="#playbook" className="text-muted-foreground hover:text-foreground">Playbook</a></li>
+                <li><a href="#contato" className="text-muted-foreground hover:text-foreground">Contato</a></li>
               </ul>
             </div>
           </div>
 
-          <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-border pt-6 sm:flex-row">
+          <div className="mt-12 border-t border-border pt-6">
             <p className="text-sm text-muted-foreground">
               © 2026 BIPETech. Tecnologia educacional brasileira. Todos os direitos reservados.
             </p>
